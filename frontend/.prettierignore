@@ -1,10 +1,6 @@
 node_modules/
 package.json
 package-lock.json
-yarn.lock
-packages/**/build/
-packages/**/public/static/
-packages/dashboard-legacy/
 *.snap
 *.svg
 *.sh
