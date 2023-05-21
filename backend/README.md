@@ -12,7 +12,7 @@ bash initialize.sh
 You can start the server locally by running the following command on the root directory:
 
 ```bash
-python3.10 manage.py runserver 0.0.0.0:9000
+bash runServer.sh <server_port>
 ```
 
-This is telling it to run on port 9000, but you can choose whatever port you prefer.
+The server will run on port 9000 by default if you don't provide any `server_port`.
