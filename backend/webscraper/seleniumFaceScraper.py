@@ -2,11 +2,16 @@ import time
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 
+# Set Chrome options
+chrome_options = Options()
+chrome_options.add_argument("--headless")  # Run Chrome in headless mode
+
 CHROMEDRIVER_PATH = "./chromedriver/chromedriver"
-driver = webdriver.Chrome(CHROMEDRIVER_PATH)
+driver = webdriver.Chrome(CHROMEDRIVER_PATH, options=chrome_options)
 
 # open site
 FACEBOOK_SITE = "https://www.facebook.com/ProReitoriadeCulturaeExtensao"
