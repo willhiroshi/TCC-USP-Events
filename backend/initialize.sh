@@ -6,4 +6,3 @@ apt-get install -y pip
 
 # install lib dependencies
 python3.10 -m pip install -U -r requirements.txt
-export PYTHONPATH="${PYTHONPATH}:$PWD"
