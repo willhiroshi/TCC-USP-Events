@@ -9,7 +9,7 @@ def getLatLonByAddress(address: str = 'USP - Cidade Universitária'):
     location = geolocator.geocode(address, country_codes="br")
     print(location.latitude, location.longitude)
 
-    return location.latitude, location.longitude
+    return str(location.latitude), str(location.longitude)
 
 
 getLatLonByAddress()

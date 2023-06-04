@@ -3,7 +3,7 @@ from faceScraper import get_facebook_posts
 from geocoding import getLatLonByAddress
 
 facebook_page = "https://www.facebook.com/ProReitoriadeCulturaeExtensao"
-posts = get_facebook_posts(facebook_page=facebook_page, num_posts=2)
+posts = get_facebook_posts(facebook_page=facebook_page, num_posts=1)
 
 def getProcessPosts():
     processed_posts = []

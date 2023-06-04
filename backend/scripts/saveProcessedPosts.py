@@ -1,9 +1,7 @@
 from getProcessPosts import getProcessPosts
-# from backend.server.views import event
 import requests
 
 processedPosts = getProcessPosts()
-# processedPosts = [{'date': '2023-06-04', 'address': 'Universidade de São Paulo (USP)', 'price': 'R$ 5,00'}]
 
 print(processedPosts)
 
