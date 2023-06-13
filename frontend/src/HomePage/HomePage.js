@@ -1,28 +1,20 @@
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { MapContainer, TileLayer } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 
-const centerMapLocation = {
-  lat: 44,
-  lng: -80
-};
-
-const markerLocation = {
-  lat: 44,
-  lng: -80
-};
-
-const mapContainerStyle = { width: '100%', height: '100vh' };
-
-function HomePage() {
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY
-  });
-
-  if (!isLoaded) return <div> Loading the map... </div>;
+const HomePage = () => {
   return (
-    <GoogleMap zoom={10} center={centerMapLocation} mapContainerStyle={mapContainerStyle}>
-      <Marker position={markerLocation}></Marker>
-    </GoogleMap>
+    <MapContainer
+      style={{ width: '100wh', height: '100vh' }}
+      center={[51.505, -0.09]}
+      zoom={13}
+      scrollWheelZoom={false}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+    </MapContainer>
   );
-}
+};
 
 export default HomePage;
