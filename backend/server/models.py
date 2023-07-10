@@ -6,5 +6,5 @@ class Event(models.Model):
     date = models.CharField(max_length=50, null=True)
     address = models.CharField(max_length=300, null=True)
     price = models.CharField(max_length=50, null=True)
-    lat = models.CharField(max_length=15, null=True)
-    lng = models.CharField(max_length=15, null=True)
+    lat = models.CharField(max_length=25, null=True)
+    lng = models.CharField(max_length=25, null=True)

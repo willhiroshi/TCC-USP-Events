@@ -1,6 +1,7 @@
-beautifulsoup4==4.12.2
+beautifulsoup4==4.11.1
 Django==4.2
 djangorestframework==3.14.0
+geopy==2.3.0
 instaloader==4.9.6
 llama_cpp_python==0.1.54
 selenium==4.9.1
