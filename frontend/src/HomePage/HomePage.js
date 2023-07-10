@@ -1,8 +1,12 @@
-import { MapContainer, TileLayer, Marker, Popup, useMapEvent } from 'react-leaflet';
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import SearchField from '../SearchField/SearchField';
-import { useState } from 'react';
+import PlaceIcon from '@mui/icons-material/Place';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import LinkIcon from '@mui/icons-material/Link';
+import * as styles from './styles';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -14,12 +18,12 @@ L.Icon.Default.mergeOptions({
 
 const mockdata = [
   {
-    post_link: 'https://example.com/event-1',
+    postLink: 'https://example.com/event-1',
     date: '2023-06-15',
     address: '123 Main St, Cityville',
     price: 'Free',
-    lat: -24,
-    lng: -47
+    lat: -23.559191,
+    lng: -46.725441
   }
 ];
 
@@ -37,9 +41,28 @@ const HomePage = () => {
       />
       <SearchField />
       {mockdata.map((event) => (
-        <Marker key={event.post_link} position={[event.lat, event.lng]}>
+        <Marker key={event.postLink} position={[event.lat, event.lng]}>
           <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
+            <div className={styles.popupContainer}>
+              <div className={styles.textIcon}>
+                <PlaceIcon />
+                {event.address}
+              </div>
+              <div className={styles.textIcon}>
+                <CalendarMonthIcon />
+                {event.date}
+              </div>
+              <div className={styles.textIcon}>
+                <AttachMoneyIcon />
+                {event.price}
+              </div>
+              <div className={styles.textIcon}>
+                <LinkIcon />
+                <a href={event.postLink} target="_blank" rel="noreferrer">
+                  {event.postLink}
+                </a>
+              </div>
+            </div>
           </Popup>
         </Marker>
       ))}
