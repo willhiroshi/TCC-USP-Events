@@ -1,28 +1,73 @@
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import SearchField from '../SearchField/SearchField';
+import PlaceIcon from '@mui/icons-material/Place';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import LinkIcon from '@mui/icons-material/Link';
+import * as styles from './styles';
 
-const centerMapLocation = {
-  lat: 44,
-  lng: -80
-};
+delete L.Icon.Default.prototype._getIconUrl;
 
-const markerLocation = {
-  lat: 44,
-  lng: -80
-};
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+});
 
-const mapContainerStyle = { width: '100%', height: '100vh' };
+const mockdata = [
+  {
+    postLink: 'https://example.com/event-1',
+    date: '2023-06-15',
+    address: '123 Main St, Cityville',
+    price: 'Free',
+    lat: -23.559191,
+    lng: -46.725441
+  }
+];
 
-function HomePage() {
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY
-  });
-
-  if (!isLoaded) return <div> Loading the map... </div>;
+const HomePage = () => {
   return (
-    <GoogleMap zoom={10} center={centerMapLocation} mapContainerStyle={mapContainerStyle}>
-      <Marker position={markerLocation}></Marker>
-    </GoogleMap>
+    <MapContainer
+      style={{ width: '100wh', height: '100vh' }}
+      center={[-23.559191, -46.725441]}
+      zoom={15}
+      scrollWheelZoom={false}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <SearchField />
+      {mockdata.map((event) => (
+        <Marker key={event.postLink} position={[event.lat, event.lng]}>
+          <Popup>
+            <div className={styles.popupContainer}>
+              <div className={styles.textIcon}>
+                <PlaceIcon />
+                {event.address}
+              </div>
+              <div className={styles.textIcon}>
+                <CalendarMonthIcon />
+                {event.date}
+              </div>
+              <div className={styles.textIcon}>
+                <AttachMoneyIcon />
+                {event.price}
+              </div>
+              <div className={styles.textIcon}>
+                <LinkIcon />
+                <a href={event.postLink} target="_blank" rel="noreferrer">
+                  {event.postLink}
+                </a>
+              </div>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+    </MapContainer>
   );
-}
+};
 
 export default HomePage;

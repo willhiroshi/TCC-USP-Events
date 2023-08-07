@@ -22,5 +22,5 @@ def getProcessPosts():
             logging.info(f" Post processed: {post}\n")
         except Exception as error:
             logging.error(f" Error on processing post {post}. Error=[{error}]\n")
-
+            
     return processed_posts
