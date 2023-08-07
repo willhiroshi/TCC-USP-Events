@@ -1,3 +1,4 @@
+import logging
 import time
 
 from bs4 import BeautifulSoup
@@ -8,9 +9,10 @@ from selenium.webdriver.common.by import By
 
 # Set Chrome options
 chrome_options = Options()
+chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--headless")  # Run Chrome in headless mode
 
-CHROMEDRIVER_PATH = "./chromedriver/chromedriver"
+CHROMEDRIVER_PATH = "./chromedriver/chromedriver-114"
 driver = webdriver.Chrome(CHROMEDRIVER_PATH, options=chrome_options)
 
 
@@ -26,7 +28,7 @@ def get_facebook_posts(facebook_page: str, num_posts: int = 5):
         )
         close_button.click()
     except:
-        print("Close button not found. Skipping click.")
+        logging.info(" Close button not found. Skipping click.\n")
 
     # get limited number of posts
     posts_content = set()
@@ -42,7 +44,7 @@ def get_facebook_posts(facebook_page: str, num_posts: int = 5):
                 driver.execute_script("arguments[0].click();", button)
                 time.sleep(1)  # Wait for the expanded text to load
         except Exception as error:
-            print(f"Error clicking on 'Ver mais' button. ERROR=[{error}]")
+            logging.error(f" Error clicking on 'Ver mais' button. ERROR=[{error}]\n")
 
         # find all posts
         page_source = driver.page_source
@@ -65,12 +67,14 @@ def get_facebook_posts(facebook_page: str, num_posts: int = 5):
                     reach_maximum_posts = True
                     break
             except Exception as error:
-                print("Did not find post's text")
+                logging.error(" Did not find post's text\n")
 
         # scroll down on page
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(3)
 
     driver.quit()
+
+    logging.info(f" Posts list obtained\n")
 
     return posts_content

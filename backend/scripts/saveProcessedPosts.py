@@ -1,13 +1,16 @@
 from getProcessPosts import getProcessPosts
+import logging
 import requests
 
-processedPosts = getProcessPosts()
+logging.root.setLevel(logging.INFO)
 
-print(processedPosts)
+processedPosts = getProcessPosts()
 
 header = {'Content-type': 'application/json'}
 
 for processedPost in processedPosts:
-    print('post -> ', processedPost)
     response = requests.post('http://127.0.0.1:9000/events', headers=header, json=processedPost)
-    print(response)
+    if response.status_code >= 300:
+        logging.error(f" Falha ao salvar post no banco {processedPost}\n")
+    else:
+        logging.info(f" Post salvo com sucesso: {processedPost}\n")
