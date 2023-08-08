@@ -1,10 +1,10 @@
-from getProcessPosts import getProcessPosts
+from getProcessPosts import get_process_posts
 import logging
 import requests
 
 logging.root.setLevel(logging.INFO)
 
-processedPosts = getProcessPosts()
+processedPosts = get_process_posts()
 
 header = {'Content-type': 'application/json'}
 
