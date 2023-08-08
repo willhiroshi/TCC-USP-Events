@@ -6,7 +6,7 @@ APP_NAME = "TCC-USP-EVENTS"
 logging.root.setLevel(logging.INFO)
 
 
-def getLatLonByAddress(address: str):
+def get_lat_lon_by_address(address: str):
     try:
         geolocator = Nominatim(user_agent=APP_NAME)
         location = geolocator.geocode(address, country_codes="br")
