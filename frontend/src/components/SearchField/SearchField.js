@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import { useMap } from 'react-leaflet';
-import '../../node_modules/leaflet-geosearch/dist/geosearch.css';
+import 'leaflet-geosearch/dist/geosearch.css';
 
 const SearchField = () => {
   const provider = new OpenStreetMapProvider();

@@ -7,6 +7,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LinkIcon from '@mui/icons-material/Link';
 import * as styles from './styles';
+import useEvents from '../../hooks/events/useEvents';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -16,18 +17,11 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
 
-const mockdata = [
-  {
-    postLink: 'https://example.com/event-1',
-    date: '2023-06-15',
-    address: '123 Main St, Cityville',
-    price: 'Free',
-    lat: -23.559191,
-    lng: -46.725441
-  }
-];
-
 const HomePage = () => {
+  const { isLoading: isEventsLoading, data: events } = useEvents().getEvents();
+
+  if (isEventsLoading) return <div>Loading...</div>;
+
   return (
     <MapContainer
       style={{ width: '100wh', height: '100vh' }}
@@ -40,7 +34,7 @@ const HomePage = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <SearchField />
-      {mockdata.map((event) => (
+      {events.map((event) => (
         <Marker key={event.postLink} position={[event.lat, event.lng]}>
           <Popup>
             <div className={styles.popupContainer}>
