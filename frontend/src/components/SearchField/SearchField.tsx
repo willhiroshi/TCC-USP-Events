@@ -1,27 +1,29 @@
 import { useEffect } from 'react';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import { useMap } from 'react-leaflet';
-import '../../node_modules/leaflet-geosearch/dist/geosearch.css';
+import 'leaflet-geosearch/dist/geosearch.css';
+import { LeafletEvent, LocationEvent } from 'leaflet';
 
 const SearchField = () => {
   const provider = new OpenStreetMapProvider();
 
+  // @ts-ignore
   const searchControl = new GeoSearchControl({
+    animateZoom: true,
     provider: provider,
-    searchLabel: 'Procure uma localização...',
-    style: 'bar',
-    showPopup: false,
     retainZoomLevel: false,
-    animateZoom: true
+    searchLabel: 'Procure uma localização...',
+    showPopup: false,
+    style: 'bar'
   });
 
   const map = useMap();
   useEffect(() => {
     map.addControl(searchControl);
 
-    const handleLocationFound = (e) => {
-      const { latlng } = e;
-      map.setView(latlng, 15);
+    const handleLocationFound = (e: LeafletEvent) => {
+      const { latlng } = e as LocationEvent;
+      if (latlng) map.setView(latlng, 15);
     };
 
     map.on('geosearch/showlocation', handleLocationFound);
