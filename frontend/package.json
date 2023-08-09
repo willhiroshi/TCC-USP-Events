@@ -14,8 +14,10 @@
     "@mui/material": "^5.13.5",
     "@react-google-maps/api": "^2.18.1",
     "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/geojson": "^7946.0.10",
+    "@types/leaflet": "^1.9.3",
     "emotion": "^9.2.12",
     "leaflet": "^1.9.4",
     "leaflet-geosearch": "^3.8.0",
@@ -54,10 +56,14 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^8.34.0",
+    "@types/node": "^20.4.9",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
+    "eslint": "^8.46.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
-    "prettier": "^2.8.4"
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5"
   }
 }
