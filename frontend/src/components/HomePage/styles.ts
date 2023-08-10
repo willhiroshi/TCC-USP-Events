@@ -12,3 +12,11 @@ export const popupContainer = css`
   flex-direction: column;
   gap: 10px;
 `;
+
+export const homeContainer = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+`;
