@@ -16,7 +16,6 @@ def event(request):
 
     elif request.method == "POST":
         serializer = EventSerializer(data=request.data)
-        print("entrei no post")
 
         if serializer.is_valid():
             serializer.save()
@@ -32,7 +31,6 @@ def event_detail(request, id):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        print("salve")
         serializer = EventSerializer(event)
         return(Response(serializer.data))
 
