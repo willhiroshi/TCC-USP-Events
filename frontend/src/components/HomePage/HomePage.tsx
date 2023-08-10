@@ -22,9 +22,14 @@ L.Icon.Default.mergeOptions({
 });
 
 const HomePage = () => {
-  const { isLoading: isEventsLoading, data: events } = useEvents().getEvents();
+  const { data: events, isLoading: isEventsLoading } = useEvents().getEvents();
 
-  if (isEventsLoading) return <Loading />;
+  if (isEventsLoading)
+    return (
+      <div className={styles.homeContainer}>
+        <Loading />
+      </div>
+    );
 
   return (
     <MapContainer
