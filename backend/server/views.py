@@ -10,7 +10,15 @@ from .serializers import EventSerializer
 @api_view(["GET", "POST", "DELETE"])
 def event(request):
     if request.method == "GET":
-        events = Event.objects.all()
+        queryParams = request.query_params
+
+        if 'start_date' in queryParams and 'end_date' in queryParams:
+            start = queryParams['start_date']
+            end = queryParams['end_date']
+
+            events = Event.objects.filter(date__gte=start, date__lte=end)
+        else:
+            events = Event.objects.all()
         serializer = EventSerializer(events, many=True)
 
         return Response({"data": serializer.data})
