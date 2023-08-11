@@ -11,6 +11,7 @@ import useEvents from '../../hooks/events/useEvents';
 import React from 'react';
 import { Event } from '../../hooks/events/Types';
 import Loading from '../Loading/Loading';
+import ReloadButton from '../ReloadButton/ReloadButton';
 
 // @ts-ignore
 delete L.Icon.Default.prototype._getIconUrl;
@@ -22,12 +23,19 @@ L.Icon.Default.mergeOptions({
 });
 
 const HomePage = () => {
-  const { data: events, isLoading: isEventsLoading } = useEvents().getEvents();
+  const {
+    data: events,
+    isLoading: isEventsLoading,
+    isError: isEventsError,
+    refetch: refetchEvents,
+    isSuccess: isEventsSuccess
+  } = useEvents().getEvents();
 
-  if (isEventsLoading)
+  if (!isEventsSuccess)
     return (
       <div className={styles.homeContainer}>
-        <Loading />
+        {isEventsLoading && <Loading />}
+        {isEventsError && <ReloadButton onReload={refetchEvents} />}
       </div>
     );
 
@@ -43,7 +51,7 @@ const HomePage = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <SearchField />
-      {events.map((event: Event) => {
+      {events?.map((event: Event) => {
         if (event.lat != null && event.lng != null) {
           return (
             <Marker key={event.postLink} position={[event.lat, event.lng]}>
