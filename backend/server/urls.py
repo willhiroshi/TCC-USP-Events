@@ -21,5 +21,5 @@ from server import views
 urlpatterns = [
     path("admin", admin.site.urls),
     path("events", views.event),
-    path("events/<int:id>", views.event_detail)
+    path("events/<str:hash_id>", views.event_detail)
 ]

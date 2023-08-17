@@ -15,7 +15,7 @@ logging.root.setLevel(logging.INFO)
 
 
 def process_post(post_text: str):
-    get_info = "Colete informações sobre o evento acima em formato JSON com os valores entre aspas: data, localização, e preço. Nomeie os campos do objeto como date, address e price respectivamente ?\n\n\n"
+    get_info = "Colete informações sobre o evento acima em formato JSON com os valores entre aspas: data no formato DD/MM/YYYY, localização, e preço. Nomeie os campos do objeto como date, address e price respectivamente ?\n\n\n"
     text_to_be_processed = "\n".join([post_text, get_info])
 
     try:

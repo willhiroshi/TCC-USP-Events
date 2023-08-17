@@ -1,3 +1,5 @@
+import hashlib
+
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -9,6 +11,7 @@ from .serializers import EventSerializer
 
 @api_view(["GET", "POST", "DELETE"])
 def event(request):
+    print("salveeeeeeeeeeeee")
     if request.method == "GET":
         queryParams = request.query_params
 
@@ -24,17 +27,25 @@ def event(request):
         return Response({"data": serializer.data})
 
     elif request.method == "POST":
+        hash_object = hashlib.sha256()
+        post_link:str = request.data['post_link']
+        hash_object.update(post_link.encode())
+        hash_hex = hash_object.hexdigest()
+        dataToSerialize = request.data
+        dataToSerialize['hash_id'] = hash_hex
         serializer = EventSerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save()
             return Response({"data": serializer.data}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"data": "Error to save Post", "Post": dataToSerialize}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["GET", "PUT", "DELETE"])
-def event_detail(request, id):
+def event_detail(request, hash_id):
     try:
-        event = Event.objects.get(pk=id)
+        event = Event.objects.get(pk=hash_id)
     except Event.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
