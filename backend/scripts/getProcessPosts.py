@@ -7,7 +7,7 @@ import logging
 logging.root.setLevel(logging.INFO)
 
 facebook_page = "https://www.facebook.com/ProReitoriadeCulturaeExtensao"
-posts = get_facebook_posts(facebook_page=facebook_page, num_posts=1)
+posts = get_facebook_posts(facebook_page=facebook_page, num_posts=5)
 
 def get_process_posts():
     processed_posts = []
