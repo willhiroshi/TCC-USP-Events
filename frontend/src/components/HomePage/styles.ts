@@ -13,10 +13,15 @@ export const popupContainer = css`
   gap: 10px;
 `;
 
-export const homeContainer = css`
+export const loadingContainer = css`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100vh;
+`;
+
+export const homeContainer = css`
+  display: flex;
+  flex-direction: row;
 `;
