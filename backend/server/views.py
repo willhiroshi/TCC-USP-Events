@@ -11,7 +11,6 @@ from .serializers import EventSerializer
 
 @api_view(["GET", "POST", "DELETE"])
 def event(request):
-    print("salveeeeeeeeeeeee")
     if request.method == "GET":
         queryParams = request.query_params
 
