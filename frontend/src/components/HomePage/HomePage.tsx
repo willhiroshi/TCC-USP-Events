@@ -8,10 +8,12 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LinkIcon from '@mui/icons-material/Link';
 import * as styles from './styles';
 import useEvents from '../../hooks/events/useEvents';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Event } from '../../hooks/events/Types';
 import Loading from '../Loading/Loading';
 import ReloadButton from '../ReloadButton/ReloadButton';
+import Sidebar from '../Sidebar/Sidebar';
+import useHomeStore from '../../store/homeStore';
 
 // @ts-ignore
 delete L.Icon.Default.prototype._getIconUrl;
@@ -23,65 +25,76 @@ L.Icon.Default.mergeOptions({
 });
 
 const HomePage = () => {
+  const startPeriod = useHomeStore((state) => state.startPeriod);
+  const endPeriod = useHomeStore((state) => state.endPeriod);
+
+  const { getEvents } = useEvents();
   const {
     data: events,
     isLoading: isEventsLoading,
     isError: isEventsError,
     refetch: refetchEvents,
     isSuccess: isEventsSuccess
-  } = useEvents().getEvents();
+  } = getEvents(startPeriod, endPeriod);
+
+  useEffect(() => {
+    refetchEvents();
+  }, [startPeriod, endPeriod]);
 
   if (!isEventsSuccess)
     return (
-      <div className={styles.homeContainer}>
+      <div className={styles.loadingContainer}>
         {isEventsLoading && <Loading />}
         {isEventsError && <ReloadButton onReload={refetchEvents} />}
       </div>
     );
 
   return (
-    <MapContainer
-      style={{ width: '100wh', height: '100vh' }}
-      center={[-23.559191, -46.725441]}
-      zoom={15}
-      scrollWheelZoom={false}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <SearchField />
-      {events?.map((event: Event) => {
-        if (event.lat != null && event.lng != null) {
-          return (
-            <Marker key={event.postLink} position={[event.lat, event.lng]}>
-              <Popup>
-                <div className={styles.popupContainer}>
-                  <div className={styles.textIcon}>
-                    <PlaceIcon />
-                    {event?.address}
+    <div className={styles.homeContainer}>
+      <MapContainer
+        style={{ width: '100%', height: '100vh' }}
+        center={[-23.559191, -46.725441]}
+        zoom={15}
+        scrollWheelZoom={false}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <SearchField />
+        {events?.map((event: Event) => {
+          if (event.lat != null && event.lng != null) {
+            return (
+              <Marker key={event.postLink} position={[event.lat, event.lng]}>
+                <Popup>
+                  <div className={styles.popupContainer}>
+                    <div className={styles.textIcon}>
+                      <PlaceIcon />
+                      {event?.address}
+                    </div>
+                    <div className={styles.textIcon}>
+                      <CalendarMonthIcon />
+                      {event?.date}
+                    </div>
+                    <div className={styles.textIcon}>
+                      <AttachMoneyIcon />
+                      {event?.price}
+                    </div>
+                    <div className={styles.textIcon}>
+                      <LinkIcon />
+                      <a href={event.postLink} target="_blank" rel="noreferrer">
+                        {event?.postLink}
+                      </a>
+                    </div>
                   </div>
-                  <div className={styles.textIcon}>
-                    <CalendarMonthIcon />
-                    {event?.date}
-                  </div>
-                  <div className={styles.textIcon}>
-                    <AttachMoneyIcon />
-                    {event?.price}
-                  </div>
-                  <div className={styles.textIcon}>
-                    <LinkIcon />
-                    <a href={event.postLink} target="_blank" rel="noreferrer">
-                      {event?.postLink}
-                    </a>
-                  </div>
-                </div>
-              </Popup>
-            </Marker>
-          );
-        }
-      })}
-    </MapContainer>
+                </Popup>
+              </Marker>
+            );
+          }
+        })}
+      </MapContainer>
+      <Sidebar />
+    </div>
   );
 };
 
