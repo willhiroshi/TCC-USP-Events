@@ -1,4 +1,5 @@
 import { Dayjs } from 'dayjs';
+import camelcaseKeys from 'camelcase-keys';
 
 export class EventsRequester {
   private readonly baseURL: string;
@@ -19,6 +20,6 @@ export class EventsRequester {
 
     const response = await fetch(endpoint, requestParams);
     const apiResponse = await response.json();
-    return apiResponse.data;
+    return camelcaseKeys(apiResponse.data, { deep: true });
   };
 }

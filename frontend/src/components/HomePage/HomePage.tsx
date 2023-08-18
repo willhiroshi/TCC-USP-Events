@@ -55,7 +55,7 @@ const HomePage = () => {
         style={{ width: '100%', height: '100vh' }}
         center={[-23.559191, -46.725441]}
         zoom={15}
-        scrollWheelZoom={false}
+        scrollWheelZoom={true}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -83,7 +83,7 @@ const HomePage = () => {
                     <div className={styles.textIcon}>
                       <LinkIcon />
                       <a href={event.postLink} target="_blank" rel="noreferrer">
-                        {event?.postLink}
+                        Ver publicação original
                       </a>
                     </div>
                   </div>
