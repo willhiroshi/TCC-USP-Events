@@ -5,7 +5,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import React from 'react';
 import useHomeStore from '../../store/homeStore';
 import { FacebookEmbed } from 'react-social-media-embed';
-import { Divider } from '@mui/material';
+import { Divider, Link, Typography } from '@mui/material';
+import PlaceIcon from '@mui/icons-material/Place';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import LinkIcon from '@mui/icons-material/Link';
+import IconText from '../IconText/IconText';
 
 const Sidebar = () => {
   const startPeriod = useHomeStore((state) => state.startPeriod);
@@ -13,6 +18,8 @@ const Sidebar = () => {
 
   const setStartPeriod = useHomeStore((state) => state.setStartPeriod);
   const setEndPeriod = useHomeStore((state) => state.setEndPeriod);
+
+  const selectedEvent = useHomeStore((state) => state.selectedEvent);
 
   return (
     <div className={styles.sidebarContainer}>
@@ -33,13 +40,24 @@ const Sidebar = () => {
 
       <Divider variant="middle" />
 
-      <div className={styles.embedContainer}>
-        <FacebookEmbed
-          url="https://www.facebook.com/ProReitoriadeCulturaeExtensao/posts/pfbid02FqLobgPL6ENAtHhKgghbBa9R66s2VMzwdZgbxYBTez9mGwFPJefUSEmEizUAoB9wl?__cft__[0]=AZXVL-xX1XLulbxaC5bX5_RAe7KODsj0A3Ke6DeYx7woKrQHalQkDTR98Aqk3GmX8coYWAW5mu9L0dvhTErW5u6q2ivGJ6kKi2cSAKsvz8ZVSqMxGWBVWrmhTRnJf7tlDQR5Pd6HHJX5G627xDeszZqcmglTj9NNoTgTosNmX1_Zcg74wLnIQ3w8E-mAsNSazKJAMoLkNDn_Rd40I1fH3Ubr&__tn__=%2CO%2CP-R
-          6"
-          width={'100%'}
-        />
-      </div>
+      {selectedEvent && (
+        <div className={styles.eventInfoContainer}>
+          <Typography variant="h6">Informações do evento</Typography>
+
+          <div className={styles.iconsEventInfoContainer}>
+            <IconText IconComponent={PlaceIcon}>{selectedEvent?.address}</IconText>
+            <IconText IconComponent={CalendarMonthIcon}>{selectedEvent?.date}</IconText>
+            <IconText IconComponent={AttachMoneyIcon}>{selectedEvent?.price}</IconText>
+            <IconText IconComponent={LinkIcon}>
+              <Link href={selectedEvent.postLink} target="_blank" rel="noreferrer">
+                Ver publicação original
+              </Link>
+            </IconText>
+          </div>
+
+          <FacebookEmbed url={selectedEvent.postLink} width={'100%'} linkText="Carregando Evento" />
+        </div>
+      )}
     </div>
   );
 };

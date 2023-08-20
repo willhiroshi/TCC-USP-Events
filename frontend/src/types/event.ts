@@ -1,5 +1,6 @@
 export interface Event {
-  postLink?: string;
+  hashId: string;
+  postLink: string;
   lat?: number;
   lng?: number;
   address?: string;
