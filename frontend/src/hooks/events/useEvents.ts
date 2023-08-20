@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { EventsRequester } from './EventsRequester';
-import { Event } from './Types';
+import { Event } from '../../types/event';
 import { Dayjs } from 'dayjs';
 
 const useEvents = () => {
