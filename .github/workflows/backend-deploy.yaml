@@ -1,0 +1,39 @@
+name: Deploy Backend to Oracle Instance
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  APP_PROCESS_NAME: tcc-backend-app
+
+jobs:
+  deploy_backend:
+    runs-on: [self-hosted, linux, ARM64]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download model from huggingface
+        run: |
+          mkdir -p backend/models
+          cd backend/models
+          wget -c https://huggingface.co/eachadea/ggml-vicuna-13b-1.1/resolve/main/ggml-vic13b-uncensored-q5_1.bin
+      
+      - name: Install dependencies
+        run: |
+          cd backend
+          bash initialize.sh
+
+      - name: Delete existent application process
+        run: |
+          pm2 delete ${{ env.APP_PROCESS_NAME }}
+        continue-on-error: true
+
+      - name: Run application
+        run: |
+          cd backend
+          pm2 start runServer.sh --name ${{ env.APP_PROCESS_NAME }}
