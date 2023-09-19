@@ -14,7 +14,7 @@ header = {"Content-type": "application/json"}
 
 for processedPost in processedPosts:
     response = requests.post(
-        f"{API_BASE_URL}/api/events", headers=header, json=processedPost
+        f"{API_BASE_URL}/events", headers=header, json=processedPost
     )
     if response.status_code >= 300:
         logging.error(f" Falha ao salvar post no banco {processedPost}\n")
