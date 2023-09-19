@@ -7,6 +7,10 @@ on:
 env:
   APP_PROCESS_NAME: tcc-backend-app
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy_backend:
     runs-on: [self-hosted, linux, ARM64, backend-deployer]

@@ -7,6 +7,10 @@ on:
 env:
   APP_PROCESS_NAME: tcc-frontend-app
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy_frontend:
     runs-on: [self-hosted, linux, ARM64, frontend-deployer]
