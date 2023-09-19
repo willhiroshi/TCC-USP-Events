@@ -3,8 +3,6 @@ name: Deploy Backend to Oracle Instance
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 env:
   APP_PROCESS_NAME: tcc-backend-app
