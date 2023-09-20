@@ -4,7 +4,7 @@ import requests
 from decouple import config
 from getProcessPosts import get_process_posts
 
-API_BASE_URL = config("API_BASE_URL")
+API_BASE_URL = config("API_BASE_URL", default="http://localhost:9000", cast=str)
 
 logging.root.setLevel(logging.INFO)
 

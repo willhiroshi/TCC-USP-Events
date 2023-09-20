@@ -6,6 +6,10 @@ on:
 
 env:
   APP_PROCESS_NAME: tcc-backend-app
+  API_BASE_URL: http://uspevents.us.to
+  DB_DEBUG: False
+  DB_SECRET_KEY: ${{ secrets.DB_SECRET_KEY }}
+  MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -21,14 +25,25 @@ jobs:
 
       - name: Download model from huggingface
         run: |
-          mkdir -p backend/models
-          cd backend/models
-          wget -c https://huggingface.co/eachadea/ggml-vicuna-13b-1.1/resolve/main/ggml-vic13b-uncensored-q5_1.bin
+          mkdir -p models
+          cd models
+          wget -q --show-progress -nc https://huggingface.co/eachadea/ggml-vicuna-13b-1.1/resolve/main/ggml-vic13b-uncensored-q5_1.bin
+        working-directory: ${{ env.MODEL_BASE_PATH }}
       
       - name: Install dependencies
         run: |
           cd backend
           bash initialize.sh
+
+      - name: Setup environment variables
+        run: |
+          cd backend
+          cat << EOF > .env
+          API_BASE_URL=${{ env.API_BASE_URL }}
+          DB_DEBUG=${{ env.DB_DEBUG }}
+          DB_SECRET_KEY=${{ env.DB_SECRET_KEY }}
+          MODEL_BASEPATH=${{ env.MODEL_BASE_PATH }}
+          EOF
 
       - name: Delete existent application process
         run: |

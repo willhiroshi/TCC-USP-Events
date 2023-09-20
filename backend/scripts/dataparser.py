@@ -1,10 +1,11 @@
 import json
 import logging
 
+from decouple import config
 from llama_cpp import Llama
 
-# wget -c https://huggingface.co/eachadea/ggml-vicuna-13b-1.1/resolve/main/ggml-vic13b-uncensored-q5_1.bin
-MODEL_PATH = "../models/ggml-vic13b-uncensored-q5_1.bin"
+MODEL_FILENAME = "ggml-vic13b-uncensored-q5_1.bin"
+MODEL_PATH = config("MODEL_BASEPATH", default="../models", cast=str) + "/" + MODEL_FILENAME
 llm = Llama(model_path=MODEL_PATH, n_threads=4)
 
 TEMPERATURE = 0.70
