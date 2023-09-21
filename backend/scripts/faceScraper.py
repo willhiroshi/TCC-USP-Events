@@ -2,7 +2,9 @@ import logging
 import time
 
 from bs4 import BeautifulSoup
+from decouple import config
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 
@@ -10,8 +12,16 @@ from selenium.webdriver.firefox.options import Options
 firefox_options = Options()
 firefox_options.add_argument("--headless")
 
-GECKODRIVER_PATH = "./geckodriver/geckodriver-linux64"
-driver = webdriver.Firefox(executable_path=GECKODRIVER_PATH, options=firefox_options)
+os = config("OPERATING_SYSTEM", default="linux")
+if os == "linux":
+    GECKODRIVER_PATH = "./geckodriver/geckodriver-linux64"
+elif os == "arm64":
+    GECKODRIVER_PATH = "./geckodriver/geckodriver-aarch64"
+else:
+    raise ValueError(f"Unsupported OS: {os}")
+
+service = Service(executable_path=GECKODRIVER_PATH)
+driver = webdriver.Firefox(service=service, options=firefox_options)
 
 
 def get_facebook_posts(facebook_page: str, num_posts: int = 5):
