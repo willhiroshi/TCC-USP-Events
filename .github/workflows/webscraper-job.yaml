@@ -1,0 +1,52 @@
+name: Setup webscraper cronjob
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  API_BASE_URL: http://uspevents.us.to
+  MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}
+  SCRIPTS_PATH: /home/${{ secrets.SERVER_USERNAME }}/scripts
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  start_websraper_job:
+    runs-on: [self-hosted, linux, ARM64, general-worker]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies to run the cronjob and start cron service
+        run: |
+          sudo apt install cron -y
+          sudo systemctl enable cron
+
+      - name: Install python dependencies to run scripts
+        run: |
+          cd backend
+          bash initialize.sh
+
+      - name: Setup environment variables
+        run: |
+          cd backend/scripts
+          cat << EOF > .env
+          API_BASE_URL=${{ env.API_BASE_URL }}
+          MODEL_BASEPATH=${{ env.MODEL_BASE_PATH }}
+          EOF
+
+      - name: Delete the contents of the scripts folder and copy the scripts to it
+        run: |
+          rm -rf ${{ env.SCRIPTS_PATH }}
+          mkdir -p ${{ env.SCRIPTS_PATH }}
+          cp -r backend/scripts/* ${{ env.SCRIPTS_PATH }}
+
+      - name: Delete existent cronjobs and add new one
+        run: |
+          crontab -r
+          echo "0 */6 * * * ${{ env.SCRIPTS_PATH }}/savePosts.sh" > mycron
+          crontab mycron
