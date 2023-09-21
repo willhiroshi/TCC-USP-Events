@@ -9,7 +9,7 @@ env:
   API_BASE_URL: http://uspevents.us.to
   DB_DEBUG: False
   DB_SECRET_KEY: ${{ secrets.DB_SECRET_KEY }}
-  MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}
+  MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}/models
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -22,13 +22,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Download model from huggingface
-        run: |
-          mkdir -p models
-          cd models
-          wget -q --show-progress -nc https://huggingface.co/eachadea/ggml-vicuna-13b-1.1/resolve/main/ggml-vic13b-uncensored-q5_1.bin
-        working-directory: ${{ env.MODEL_BASE_PATH }}
       
       - name: Install dependencies
         run: |
@@ -42,7 +35,7 @@ jobs:
           API_BASE_URL=${{ env.API_BASE_URL }}
           DB_DEBUG=${{ env.DB_DEBUG }}
           DB_SECRET_KEY=${{ env.DB_SECRET_KEY }}
-          MODEL_BASEPATH=${{ env.MODEL_BASE_PATH }}
+          MODEL_BASE_PATH=${{ env.MODEL_BASE_PATH }}/models
           EOF
 
       - name: Delete existent application process

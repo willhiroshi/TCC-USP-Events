@@ -6,7 +6,7 @@ on:
 
 env:
   API_BASE_URL: http://uspevents.us.to
-  MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}
+  MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}/models
   SCRIPTS_PATH: /home/${{ secrets.SERVER_USERNAME }}/scripts
 
 concurrency:
@@ -21,6 +21,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Download model from huggingface
+        run: |
+          mkdir -p ${{ env.MODEL_BASE_PATH }}
+          wget -q --show-progress -nc -P ${{ env.MODEL_BASE_PATH }} https://huggingface.co/eachadea/ggml-vicuna-13b-1.1/resolve/main/ggml-vic13b-uncensored-q5_1.bin
+        working-directory: ${{ env.MODEL_BASE_PATH }}
+
       - name: Install dependencies to run the cronjob and start cron service
         run: |
           sudo apt install cron -y
@@ -31,22 +37,22 @@ jobs:
           cd backend
           bash initialize.sh
 
-      - name: Setup environment variables
-        run: |
-          cd backend/scripts
-          cat << EOF > .env
-          API_BASE_URL=${{ env.API_BASE_URL }}
-          MODEL_BASEPATH=${{ env.MODEL_BASE_PATH }}
-          EOF
-
       - name: Delete the contents of the scripts folder and copy the scripts to it
         run: |
           rm -rf ${{ env.SCRIPTS_PATH }}
           mkdir -p ${{ env.SCRIPTS_PATH }}
           cp -r backend/scripts/* ${{ env.SCRIPTS_PATH }}
 
+      - name: Setup environment variables
+        run: |
+          cd ${{ env.SCRIPTS_PATH }}
+          cat << EOF > .env
+          API_BASE_URL=${{ env.API_BASE_URL }}
+          MODEL_BASE_PATH=${{ env.MODEL_BASE_PATH }}
+          EOF
+
       - name: Delete existent cronjobs and add new one
         run: |
-          crontab -r
+          crontab -r || true
           echo "0 */6 * * * ${{ env.SCRIPTS_PATH }}/savePosts.sh" > mycron
           crontab mycron

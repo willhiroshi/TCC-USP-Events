@@ -5,7 +5,7 @@ from decouple import config
 from llama_cpp import Llama
 
 MODEL_FILENAME = "ggml-vic13b-uncensored-q5_1.bin"
-MODEL_PATH = config("MODEL_BASEPATH", default="../models", cast=str) + "/" + MODEL_FILENAME
+MODEL_PATH = config("MODEL_BASE_PATH", default="../models", cast=str) + "/" + MODEL_FILENAME
 llm = Llama(model_path=MODEL_PATH, n_threads=4)
 
 TEMPERATURE = 0.70
