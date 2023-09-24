@@ -30,6 +30,7 @@ jobs:
 
       - name: Install dependencies to run the cronjob and start cron service
         run: |
+          sudo apt install firefox -y
           sudo apt install cron -y
           sudo systemctl enable cron
 

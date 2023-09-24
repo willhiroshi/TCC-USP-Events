@@ -29,7 +29,7 @@ def get_facebook_posts(facebook_page: str, num_posts: int = 5):
     driver.get(facebook_page)
 
     # close the login modal
-    time.sleep(3)
+    time.sleep(5)
     try:
         close_button = driver.find_element(
             by=By.XPATH, value='//div[@aria-label="Fechar"]'
