@@ -6,7 +6,6 @@ on:
 
 env:
   APP_PROCESS_NAME: tcc-backend-app
-  API_BASE_URL: http://uspevents.us.to
   DB_DEBUG: False
   DB_SECRET_KEY: ${{ secrets.DB_SECRET_KEY }}
   MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}/models
@@ -32,7 +31,6 @@ jobs:
         run: |
           cd backend
           cat << EOF > .env
-          API_BASE_URL=${{ env.API_BASE_URL }}
           DB_DEBUG=${{ env.DB_DEBUG }}
           DB_SECRET_KEY=${{ env.DB_SECRET_KEY }}
           MODEL_BASE_PATH=${{ env.MODEL_BASE_PATH }}/models

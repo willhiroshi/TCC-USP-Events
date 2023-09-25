@@ -25,20 +25,29 @@ driver = webdriver.Firefox(service=service, options=firefox_options)
 
 
 def get_facebook_posts(facebook_page: str, num_posts: int = 5):
+    FACEBOOK_SITE = "https://www.facebook.com/"
+
     # open site
-    driver.get(facebook_page)
+    driver.get(FACEBOOK_SITE)
 
     # close the login modal
     time.sleep(5)
-    try:
-        close_button = driver.find_element(
-            by=By.XPATH, value='//div[@aria-label="Fechar"]'
-        )
-        close_button.click()
-    except:
-        logging.info(" Close button not found. Skipping click.\n")
 
-    # wait for initial page to load
+    # login on facebook
+    email = driver.find_element(By.NAME, "email")
+    email.send_keys(config("FACEBOOK_EMAIL"))
+
+    password = driver.find_element(By.NAME, "pass")
+    password.send_keys(config("FACEBOOK_PASSWORD"))
+
+    login_button = driver.find_element(By.NAME, "login")
+    login_button.click()
+
+    # access facebook page
+    time.sleep(5)
+    driver.get(facebook_page)
+
+    # wait page to load
     time.sleep(5)
 
     # get limited number of posts
