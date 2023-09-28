@@ -11,6 +11,7 @@ env:
   OPERATING_SYSTEM: arm64
   FACEBOOK_EMAIL: ${{ secrets.FACEBOOK_EMAIL }}
   FACEBOOK_PASSWORD: ${{ secrets.FACEBOOK_PASSWORD }}
+  USERNAME: ${{ secrets.SERVER_USERNAME }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -30,6 +31,11 @@ jobs:
           wget -q --show-progress -nc -P ${{ env.MODEL_BASE_PATH }} https://huggingface.co/eachadea/ggml-vicuna-13b-1.1/resolve/main/ggml-vic13b-uncensored-q5_1.bin
         working-directory: ${{ env.MODEL_BASE_PATH }}
 
+      - name: Install python dependencies to run scripts
+        run: |
+          cd backend
+          bash initialize.sh
+
       - name: Install dependencies to run the cronjob and start cron service
         run: |
           if ! dpkg -l chromium-browser | grep -q "85.0.4183.83"; then
@@ -38,13 +44,17 @@ jobs:
           else
             echo "Chromium browser version 85.0.4183.83 is already installed."
           fi
+
+          if ! dpkg -l chromium-chromedriver | grep -q "85.0.4183.83"; then
+            wget http://ports.ubuntu.com/pool/universe/c/chromium-browser/chromium-chromedriver_85.0.4183.83-0ubuntu2_arm64.deb
+            sudo dpkg -i chromium-chromedriver_85.0.4183.83-0ubuntu2_arm64.deb
+          else
+            echo "Chromium chromedriver version 85.0.4183.83 is already installed."
+          fi
+
+          cp /usr/bin/chromedriver /home/${{ env.USERNAME }}/.local/share/undetected_chromedriver/chromedriver_copy
           sudo apt install cron -y
           sudo systemctl enable cron
-
-      - name: Install python dependencies to run scripts
-        run: |
-          cd backend
-          bash initialize.sh
 
       - name: Delete the contents of the scripts folder and copy the scripts to it
         run: |

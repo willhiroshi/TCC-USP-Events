@@ -1,20 +1,18 @@
+import getpass
 import logging
 import time
 
+import undetected_chromedriver as uc
 from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 
-# Set Chrome options
-chrome_options = Options()
-chrome_options.add_argument("--headless")
+username = getpass.getuser()
 
-CHROMEDRIVER_PATH = "./chromedriver/chromedriver-117"
-
-service = Service(executable_path=CHROMEDRIVER_PATH)
-driver = webdriver.Chrome(service=service, options=chrome_options)
+driver = uc.Chrome(
+    use_subprocess=False,
+    headless=True,
+    driver_executable_path=f"/home/{username}/.local/share/undetected_chromedriver/chromedriver_copy",
+)
 
 
 def get_facebook_posts(facebook_page: str, num_posts: int = 5):
@@ -86,9 +84,3 @@ def get_facebook_posts(facebook_page: str, num_posts: int = 5):
     logging.info(f" Posts list obtained\n")
 
     return posts_content
-
-facebook_page = "https://www.facebook.com/ProReitoriadeCulturaeExtensao"
-posts = get_facebook_posts(facebook_page=facebook_page, num_posts=5)
-
-for post in posts:
-    print(post)
