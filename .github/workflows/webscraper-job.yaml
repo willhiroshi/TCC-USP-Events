@@ -32,7 +32,12 @@ jobs:
 
       - name: Install dependencies to run the cronjob and start cron service
         run: |
-          sudo apt install firefox -y
+          if ! dpkg -l chromium-browser | grep -q "85.0.4183.83"; then
+            wget http://ports.ubuntu.com/pool/universe/c/chromium-browser/chromium-browser_85.0.4183.83-0ubuntu2_arm64.deb
+            sudo dpkg -i chromium-browser_85.0.4183.83-0ubuntu2_arm64.deb
+          else
+            echo "Chromium browser version 85.0.4183.83 is already installed."
+          fi
           sudo apt install cron -y
           sudo systemctl enable cron
 

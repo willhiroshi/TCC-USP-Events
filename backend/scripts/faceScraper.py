@@ -2,53 +2,34 @@ import logging
 import time
 
 from bs4 import BeautifulSoup
-from decouple import config
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
 
 # Set Chrome options
-firefox_options = Options()
-firefox_options.add_argument("--headless")
+chrome_options = Options()
+chrome_options.add_argument("--headless")
 
-os = config("OPERATING_SYSTEM", default="linux")
-if os == "linux":
-    GECKODRIVER_PATH = "./geckodriver/geckodriver-linux64"
-elif os == "arm64":
-    GECKODRIVER_PATH = "./geckodriver/geckodriver-aarch64"
-else:
-    raise ValueError(f"Unsupported OS: {os}")
+CHROMEDRIVER_PATH = "./chromedriver/chromedriver-117"
 
-service = Service(executable_path=GECKODRIVER_PATH)
-driver = webdriver.Firefox(service=service, options=firefox_options)
+service = Service(executable_path=CHROMEDRIVER_PATH)
+driver = webdriver.Chrome(service=service, options=chrome_options)
 
 
 def get_facebook_posts(facebook_page: str, num_posts: int = 5):
-    FACEBOOK_SITE = "https://www.facebook.com/"
-
     # open site
-    driver.get(FACEBOOK_SITE)
+    driver.get(facebook_page)
+    time.sleep(5)
 
     # close the login modal
-    time.sleep(5)
-
-    # login on facebook
-    email = driver.find_element(By.NAME, "email")
-    email.send_keys(config("FACEBOOK_EMAIL"))
-
-    password = driver.find_element(By.NAME, "pass")
-    password.send_keys(config("FACEBOOK_PASSWORD"))
-
-    login_button = driver.find_element(By.NAME, "login")
-    login_button.click()
-
-    # access facebook page
-    time.sleep(5)
-    driver.get(facebook_page)
-
-    # wait page to load
-    time.sleep(5)
+    try:
+        close_button = driver.find_element(
+            by=By.XPATH, value='//div[@aria-label="Fechar" or @aria-label="Close"]'
+        )
+        close_button.click()
+    except:
+        logging.info(" Close button not found. Skipping click.\n")
 
     # get limited number of posts
     posts_content = set()
@@ -98,10 +79,16 @@ def get_facebook_posts(facebook_page: str, num_posts: int = 5):
 
         # scroll down on page
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(5)
+        time.sleep(3)
 
     driver.quit()
 
     logging.info(f" Posts list obtained\n")
 
     return posts_content
+
+facebook_page = "https://www.facebook.com/ProReitoriadeCulturaeExtensao"
+posts = get_facebook_posts(facebook_page=facebook_page, num_posts=5)
+
+for post in posts:
+    print(post)
