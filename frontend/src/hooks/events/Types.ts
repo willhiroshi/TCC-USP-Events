@@ -5,4 +5,5 @@ export interface Event {
   address?: string;
   date?: string;
   price?: string;
+  hashId: string;
 }
