@@ -1,4 +1,3 @@
-import * as styles from './styles';
 import React, { useState } from 'react';
 import { styled, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -75,7 +74,7 @@ const CollapsableSidebar = () => {
   const buttonsList = CollapsableSideBarData;
 
   return (
-    <Box className={styles.body}>
+    <Box>
       <Drawer variant="permanent" open={isSideBarOpen}>
         <DrawerHeader>
           {isSideBarOpen && <b>USP Events</b>}
@@ -106,7 +105,12 @@ const CollapsableSidebar = () => {
                     {item.icon}
                   </ListItemIcon>
                   {isSideBarOpen && (
-                    <Typography className={styles.listItemText(isSideBarOpen)}>
+                    <Typography
+                      sx={{
+                        color: 'black',
+                        fontSize: '12px'
+                      }}
+                    >
                       {item.title}
                     </Typography>
                   )}
