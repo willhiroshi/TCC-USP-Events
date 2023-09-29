@@ -11,5 +11,4 @@ export const loadingContainer = css`
 export const homeContainer = css`
   display: flex;
   flex-direction: row;
-  float: right;
 `;

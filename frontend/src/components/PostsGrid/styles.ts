@@ -25,7 +25,6 @@ export const gridItem = css`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  // margin-top: -130px;
 `;
 
 export const cardItem = css`

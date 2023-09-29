@@ -25,9 +25,7 @@ const PostsGrid = () => {
   const parseDateFromEvent = (date: string) => {
     const momentDate = new Date(date);
 
-    const a = moment(momentDate).format('LL');
-    console.log('->', a);
-    return a;
+    return moment(momentDate).format('LL');
   };
 
   return (
