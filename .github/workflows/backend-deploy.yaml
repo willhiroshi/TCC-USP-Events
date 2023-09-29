@@ -1,0 +1,47 @@
+name: Deploy Backend to Oracle Instance
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  APP_PROCESS_NAME: tcc-backend-app
+  DB_DEBUG: False
+  DB_SECRET_KEY: ${{ secrets.DB_SECRET_KEY }}
+  MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}/models
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy_backend:
+    runs-on: [self-hosted, linux, ARM64, backend-deployer]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Install dependencies
+        run: |
+          cd backend
+          bash initialize.sh
+
+      - name: Setup environment variables
+        run: |
+          cd backend
+          cat << EOF > .env
+          DB_DEBUG=${{ env.DB_DEBUG }}
+          DB_SECRET_KEY=${{ env.DB_SECRET_KEY }}
+          MODEL_BASE_PATH=${{ env.MODEL_BASE_PATH }}/models
+          EOF
+
+      - name: Delete existent application process
+        run: |
+          pm2 delete ${{ env.APP_PROCESS_NAME }}
+        continue-on-error: true
+
+      - name: Run application
+        run: |
+          cd backend
+          pm2 start runServer.sh --name ${{ env.APP_PROCESS_NAME }}

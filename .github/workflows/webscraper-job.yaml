@@ -1,0 +1,80 @@
+name: Setup webscraper cronjob
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  API_BASE_URL: http://uspevents.us.to/api
+  MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}/models
+  SCRIPTS_PATH: /home/${{ secrets.SERVER_USERNAME }}/scripts
+  OPERATING_SYSTEM: arm64
+  FACEBOOK_EMAIL: ${{ secrets.FACEBOOK_EMAIL }}
+  FACEBOOK_PASSWORD: ${{ secrets.FACEBOOK_PASSWORD }}
+  USERNAME: ${{ secrets.SERVER_USERNAME }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  start_websraper_job:
+    runs-on: [self-hosted, linux, ARM64, general-worker]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download model from huggingface
+        run: |
+          mkdir -p ${{ env.MODEL_BASE_PATH }}
+          wget -q --show-progress -nc -P ${{ env.MODEL_BASE_PATH }} https://huggingface.co/eachadea/ggml-vicuna-13b-1.1/resolve/main/ggml-vic13b-uncensored-q5_1.bin
+        working-directory: ${{ env.MODEL_BASE_PATH }}
+
+      - name: Install python dependencies to run scripts
+        run: |
+          cd backend
+          bash initialize.sh
+
+      - name: Install dependencies to run the cronjob and start cron service
+        run: |
+          if ! dpkg -l chromium-browser | grep -q "85.0.4183.83"; then
+            wget http://ports.ubuntu.com/pool/universe/c/chromium-browser/chromium-browser_85.0.4183.83-0ubuntu2_arm64.deb
+            sudo dpkg -i chromium-browser_85.0.4183.83-0ubuntu2_arm64.deb
+          else
+            echo "Chromium browser version 85.0.4183.83 is already installed."
+          fi
+
+          if ! dpkg -l chromium-chromedriver | grep -q "85.0.4183.83"; then
+            wget http://ports.ubuntu.com/pool/universe/c/chromium-browser/chromium-chromedriver_85.0.4183.83-0ubuntu2_arm64.deb
+            sudo dpkg -i chromium-chromedriver_85.0.4183.83-0ubuntu2_arm64.deb
+          else
+            echo "Chromium chromedriver version 85.0.4183.83 is already installed."
+          fi
+
+          cp /usr/bin/chromedriver /home/${{ env.USERNAME }}/.local/share/undetected_chromedriver/chromedriver_copy
+          sudo apt install cron -y
+          sudo systemctl enable cron
+
+      - name: Delete the contents of the scripts folder and copy the scripts to it
+        run: |
+          rm -rf ${{ env.SCRIPTS_PATH }}
+          mkdir -p ${{ env.SCRIPTS_PATH }}
+          cp -r backend/scripts/* ${{ env.SCRIPTS_PATH }}
+
+      - name: Setup environment variables
+        run: |
+          cd ${{ env.SCRIPTS_PATH }}
+          cat << EOF > .env
+          API_BASE_URL=${{ env.API_BASE_URL }}
+          MODEL_BASE_PATH=${{ env.MODEL_BASE_PATH }}
+          OPERATING_SYSTEM=${{ env.OPERATING_SYSTEM }}
+          FACEBOOK_EMAIL=${{ env.FACEBOOK_EMAIL }}
+          FACEBOOK_PASSWORD=${{ env.FACEBOOK_PASSWORD }}
+          EOF
+
+      - name: Delete existent cronjobs and add new one
+        run: |
+          crontab -r || true
+          echo "0 */6 * * * ${{ env.SCRIPTS_PATH }}/savePosts.sh" > mycron
+          crontab mycron

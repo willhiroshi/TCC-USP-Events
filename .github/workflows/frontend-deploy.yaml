@@ -1,0 +1,45 @@
+name: Deploy Frontend to Oracle Instance
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  APP_PROCESS_NAME: tcc-frontend-app
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy_frontend:
+    runs-on: [self-hosted, linux, ARM64, frontend-deployer]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '19'
+
+      - name: Install PM2
+        run: npm install pm2@latest -g
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm install
+          npm install -g serve
+          npm run build
+
+      - name: Delete existent application process
+        run: |
+          pm2 delete ${{ env.APP_PROCESS_NAME }}
+        continue-on-error: true
+
+      - name: Run application
+        run: |
+          cd frontend
+          pm2 serve build 8080 --spa --name ${{ env.APP_PROCESS_NAME }}
