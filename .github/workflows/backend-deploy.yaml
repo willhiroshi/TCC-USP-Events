@@ -8,7 +8,6 @@ env:
   APP_PROCESS_NAME: tcc-backend-app
   DB_DEBUG: False
   DB_SECRET_KEY: ${{ secrets.DB_SECRET_KEY }}
-  MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}/models
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -33,7 +32,6 @@ jobs:
           cat << EOF > .env
           DB_DEBUG=${{ env.DB_DEBUG }}
           DB_SECRET_KEY=${{ env.DB_SECRET_KEY }}
-          MODEL_BASE_PATH=${{ env.MODEL_BASE_PATH }}/models
           EOF
 
       - name: Delete existent application process

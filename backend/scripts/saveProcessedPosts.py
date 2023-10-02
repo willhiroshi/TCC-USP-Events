@@ -1,22 +1,21 @@
-import logging
-
 import requests
+from classes.Logger import Logger
 from decouple import config
 from getProcessPosts import get_process_posts
 
 API_BASE_URL = config("API_BASE_URL", default="http://localhost:9000", cast=str)
 
-logging.root.setLevel(logging.INFO)
-
 processedPosts = get_process_posts()
 
 header = {"Content-type": "application/json"}
+
+logger = Logger(__name__)
 
 for processedPost in processedPosts:
     response = requests.post(
         f"{API_BASE_URL}/events", headers=header, json=processedPost
     )
     if response.status_code >= 300:
-        logging.error(f" Falha ao salvar post no banco {processedPost}\n")
+        logger.error(f"Falha ao salvar post no banco {processedPost}")
     else:
-        logging.info(f" Post salvo com sucesso: {processedPost}\n")
+        logger.info(f"Post salvo com sucesso: {processedPost}")
