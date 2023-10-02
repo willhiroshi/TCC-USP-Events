@@ -1,17 +1,18 @@
 import getpass
-import logging
 import time
 
 import undetected_chromedriver as uc
 from bs4 import BeautifulSoup
+from classes.Logger import Logger
 from selenium.webdriver.common.by import By
 
+logger = Logger(__name__)
 username = getpass.getuser()
 
+CHROME_DRIVER_PATH = f"/home/{username}/.local/share/undetected_chromedriver/chromedriver_copy"
+
 driver = uc.Chrome(
-    use_subprocess=False,
-    headless=True,
-    driver_executable_path=f"/home/{username}/.local/share/undetected_chromedriver/chromedriver_copy",
+    use_subprocess=False, headless=True, driver_executable_path=CHROME_DRIVER_PATH
 )
 
 
@@ -27,7 +28,7 @@ def get_facebook_posts(facebook_page: str, num_posts: int = 5):
         )
         close_button.click()
     except:
-        logging.info(" Close button not found. Skipping click.\n")
+        logger.info("Close button not found. Skipping click.")
 
     # get limited number of posts
     posts_content = set()
@@ -43,7 +44,7 @@ def get_facebook_posts(facebook_page: str, num_posts: int = 5):
                 driver.execute_script("arguments[0].click();", button)
                 time.sleep(2)  # Wait for the expanded text to load
         except Exception as error:
-            logging.error(f" Error clicking on 'Ver mais' button. ERROR=[{error}]\n")
+            logger.error(f"Error clicking on 'Ver mais' button. ERROR=[{error}]")
 
         # find all posts
         page_source = driver.page_source
@@ -73,7 +74,7 @@ def get_facebook_posts(facebook_page: str, num_posts: int = 5):
                     reach_maximum_posts = True
                     break
             except Exception as error:
-                logging.error(f" Did not find post's text\n${error}")
+                logger.error(f"Did not find post's text\n${error}")
 
         # scroll down on page
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -81,6 +82,6 @@ def get_facebook_posts(facebook_page: str, num_posts: int = 5):
 
     driver.quit()
 
-    logging.info(f" Posts list obtained\n")
+    logger.info(f" Posts list obtained\n")
 
     return posts_content

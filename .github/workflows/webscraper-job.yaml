@@ -6,12 +6,15 @@ on:
 
 env:
   API_BASE_URL: http://uspevents.us.to/api
-  MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}/models
-  SCRIPTS_PATH: /home/${{ secrets.SERVER_USERNAME }}/scripts
+  USERNAME: ${{ secrets.SERVER_USERNAME }}
+  MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}/tcc/models
+  SCRIPTS_PATH: /home/${{ secrets.SERVER_USERNAME }}/tcc/scripts
   OPERATING_SYSTEM: arm64
+  LOG_LEVEL: ERROR
   FACEBOOK_EMAIL: ${{ secrets.FACEBOOK_EMAIL }}
   FACEBOOK_PASSWORD: ${{ secrets.FACEBOOK_PASSWORD }}
-  USERNAME: ${{ secrets.SERVER_USERNAME }}
+  INSTAGRAM_EMAIL: ${{ secrets.INSTAGRAM_EMAIL }}
+  INSTAGRAM_PASSWORD: ${{ secrets.INSTAGRAM_PASSWORD }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -69,8 +72,11 @@ jobs:
           API_BASE_URL=${{ env.API_BASE_URL }}
           MODEL_BASE_PATH=${{ env.MODEL_BASE_PATH }}
           OPERATING_SYSTEM=${{ env.OPERATING_SYSTEM }}
+          LOG_LEVEL=${{ env.LOG_LEVEL }}
           FACEBOOK_EMAIL=${{ env.FACEBOOK_EMAIL }}
           FACEBOOK_PASSWORD=${{ env.FACEBOOK_PASSWORD }}
+          INSTAGRAM_EMAIL=${{ env.INSTAGRAM_EMAIL }}
+          INSTAGRAM_PASSWORD=${{ env.INSTAGRAM_PASSWORD }}
           EOF
 
       - name: Delete existent cronjobs and add new one

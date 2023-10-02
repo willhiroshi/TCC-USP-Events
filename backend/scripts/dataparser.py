@@ -1,17 +1,20 @@
 import json
-import logging
 
+from classes.Logger import Logger
 from decouple import config
 from llama_cpp import Llama
 
+logger = Logger(__name__)
+
+
 MODEL_FILENAME = "ggml-vic13b-uncensored-q5_1.bin"
-MODEL_PATH = config("MODEL_BASE_PATH", default="../models", cast=str) + "/" + MODEL_FILENAME
+MODEL_PATH = (
+    config("MODEL_BASE_PATH", default="../models", cast=str) + "/" + MODEL_FILENAME
+)
 llm = Llama(model_path=MODEL_PATH, n_threads=4)
 
 TEMPERATURE = 0.70
 TOP_P = 0.95
-
-logging.root.setLevel(logging.INFO)
 
 
 def process_post(post_text: str):
@@ -19,11 +22,14 @@ def process_post(post_text: str):
     text_to_be_processed = "\n".join([post_text, get_info])
 
     try:
+        logger.info(f"Start processing post text: {post_text}")
+
         output = llm(text_to_be_processed, temperature=TEMPERATURE, top_p=TOP_P)
-        logging.info(f" Model obtained infos from post\n")
         processed_text = output["choices"][0]["text"].strip().replace("```", "")
-        logging.info(f" Post processed successfully\n")
+
+        logger.info(f"Post processed successfully: {processed_text}")
+
         return json.loads(processed_text)
     except Exception as error:
-        logging.error(f" Error on processing post. Error=[{error}]\n")
+        logger.error(f"Error on processing post. Error=[{error}]")
         return {}
