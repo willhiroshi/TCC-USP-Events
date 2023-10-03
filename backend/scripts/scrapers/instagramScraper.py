@@ -1,4 +1,5 @@
 import getpass
+import re
 import time
 
 import undetected_chromedriver as uc
@@ -16,7 +17,6 @@ options._user_data_dir = user_data_dir
 driver = uc.Chrome(
     use_subprocess=False,
     options=options,
-    headless=True,
     driver_executable_path=f"/home/{username}/.local/share/undetected_chromedriver/chromedriver_copy",
 )
 
@@ -25,6 +25,12 @@ INSTAGRAM_EMAIL = config("INSTAGRAM_EMAIL")
 INSTAGRAM_PASSWORD = config("INSTAGRAM_PASSWORD")
 
 logger = Logger(__name__)
+
+
+def _pre_process_post_text(post_text: str) -> str:
+    without_hashtags = re.sub(r"#\w+\s*", "", post_text)
+    without_hashtags_excessive_breaks = re.sub(r"\n+", "\n", without_hashtags)
+    return without_hashtags_excessive_breaks
 
 
 def _login(email: str, password: str) -> None:
@@ -84,18 +90,27 @@ def get_instagram_posts(instagram_page: str, num_posts: int = 5) -> set[RawPost]
 
                 # get post content information
                 post_link = post.get_attribute("href")
+                logger.info(f"[Post {len(posts_content)}] Post link: {post_link}")
 
                 # get post text
                 post_text = driver.find_element(
                     By.CSS_SELECTOR,
                     "h1._aacl._aaco._aacu._aacx._aad7._aade",
                 ).text
+                logger.info(
+                    f"[Post {len(posts_content)}] Post text: {post_text[:30]}..."
+                )
 
-                posts_content.add(RawPost(post_text=post_text, post_link=post_link))
+                posts_content.add(
+                    RawPost(
+                        post_text=_pre_process_post_text(post_text), post_link=post_link
+                    )
+                )
                 if len(posts_content) >= num_posts:
                     reach_maximum_posts = True
                     break
 
+                logger.info(f"[Post {len(posts_content)}] Post got successfully.\n")
                 driver.back()
 
             except Exception as error:

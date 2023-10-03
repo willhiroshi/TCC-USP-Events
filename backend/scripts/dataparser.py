@@ -11,7 +11,7 @@ MODEL_FILENAME = "ggml-vic13b-uncensored-q5_1.bin"
 MODEL_PATH = (
     config("MODEL_BASE_PATH", default="../models", cast=str) + "/" + MODEL_FILENAME
 )
-llm = Llama(model_path=MODEL_PATH, n_threads=4)
+llm = Llama(model_path=MODEL_PATH, n_threads=6, verbose=True, n_ctx=1024)
 
 TEMPERATURE = 0.70
 TOP_P = 0.95
@@ -22,7 +22,7 @@ def process_post(post_text: str):
     text_to_be_processed = "\n".join([post_text, get_info])
 
     try:
-        logger.info(f"Start processing post text: {post_text}")
+        logger.info(f"Start processing post text: {post_text[:50]}...")
 
         output = llm(text_to_be_processed, temperature=TEMPERATURE, top_p=TOP_P)
         processed_text = output["choices"][0]["text"].strip().replace("```", "")
