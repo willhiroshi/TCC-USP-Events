@@ -6,4 +6,13 @@ from .models import Event
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ["post_link", "address", "date", "price", "lat", "lng", "hash_id"]
+        fields = [
+            "hash_id",
+            "post_link",
+            "address",
+            "date",
+            "price",
+            "lat",
+            "lng",
+            "type",
+        ]
