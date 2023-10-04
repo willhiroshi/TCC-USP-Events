@@ -7,18 +7,18 @@ from llama_cpp import Llama
 logger = Logger(__name__)
 
 
-MODEL_FILENAME = "ggml-vic13b-uncensored-q5_1.bin"
+MODEL_FILENAME = "llama-2-13b-chat.Q5_K_M.gguf"
 MODEL_PATH = (
     config("MODEL_BASE_PATH", default="../models", cast=str) + "/" + MODEL_FILENAME
 )
-llm = Llama(model_path=MODEL_PATH, n_threads=6, verbose=True, n_ctx=1024)
+llm = Llama(model_path=MODEL_PATH, n_threads=6, n_ctx=1024)
 
 TEMPERATURE = 0.70
 TOP_P = 0.95
 
 
 def process_post(post_text: str):
-    get_info = "Colete informações sobre o evento acima em formato JSON com os valores entre aspas: data no formato DD/MM/YYYY, localização, e preço. Nomeie os campos do objeto como date, address e price respectivamente ?\n\n\n"
+    get_info = 'Colete informações sobre o evento acima: data no formato string DD/MM/2023 ou null, localização como string ou null, preço como number ou 0 e classifique como evento cultural ("culture"), esportivo ("sport") ou sem classificação ("unclassified"). Campos devem ser "date", "address", "price" e "type". Informe apenas os dados em um formato JSON, nada mais. Responda "Não é evento", caso não seja um evento. Resposta: \n'
     text_to_be_processed = "\n".join([post_text, get_info])
 
     try:
@@ -26,8 +26,6 @@ def process_post(post_text: str):
 
         output = llm(text_to_be_processed, temperature=TEMPERATURE, top_p=TOP_P)
         processed_text = output["choices"][0]["text"].strip().replace("```", "")
-
-        logger.info(f"Post processed successfully: {processed_text}")
 
         return json.loads(processed_text)
     except Exception as error:
