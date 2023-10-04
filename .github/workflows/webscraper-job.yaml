@@ -10,7 +10,7 @@ env:
   MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}/tcc/models
   SCRIPTS_PATH: /home/${{ secrets.SERVER_USERNAME }}/tcc/scripts
   OPERATING_SYSTEM: arm64
-  LOG_LEVEL: ERROR
+  LOG_LEVEL: INFO
   FACEBOOK_EMAIL: ${{ secrets.FACEBOOK_EMAIL }}
   FACEBOOK_PASSWORD: ${{ secrets.FACEBOOK_PASSWORD }}
   INSTAGRAM_EMAIL: ${{ secrets.INSTAGRAM_EMAIL }}
