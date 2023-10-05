@@ -2,23 +2,29 @@ import getpass
 import re
 import time
 
-import undetected_chromedriver as uc
 from classes.Logger import Logger
 from classes.Post import RawPost
 from decouple import config
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 
 username = getpass.getuser()
 user_data_dir = f"/home/{username}/tcc/chrome_profiles/instagram"
 
-options = uc.ChromeOptions()
-options._user_data_dir = user_data_dir
+chrome_options = Options()
 
-driver = uc.Chrome(
-    use_subprocess=False,
-    options=options,
-    driver_executable_path=f"/home/{username}/.local/share/undetected_chromedriver/chromedriver_copy",
+chrome_options.user_data_dir = user_data_dir
+chrome_options._user_data_dir = user_data_dir
+chrome_options.add_argument("--headless=new")
+
+CHROME_DRIVER_PATH = (
+    f"/home/{username}/.local/share/undetected_chromedriver/chromedriver_copy"
 )
+service = Service(executable_path=CHROME_DRIVER_PATH)
+
+driver = webdriver.Chrome(service=service, options=chrome_options)
 
 INSTAGRAM_MAIN_PAGE = "https://www.instagram.com/"
 INSTAGRAM_EMAIL = config("INSTAGRAM_EMAIL")
