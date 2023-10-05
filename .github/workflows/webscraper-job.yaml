@@ -82,5 +82,5 @@ jobs:
       - name: Delete existent cronjobs and add new one
         run: |
           crontab -r || true
-          echo '0 */6 * * * /bin/bash -c "${{ env.SCRIPTS_PATH }}/savePosts.sh" >> ${{ env.SCRIPTS_PATH }}/cronjob_log.txt 2>&1 ' > mycron
+          echo '0 */6 * * * python3.10 "${{ env.SCRIPTS_PATH }}/saveProcessedPosts.py" >> ${{ env.SCRIPTS_PATH }}/cronjob_log.txt 2>&1' > mycron
           crontab mycron
