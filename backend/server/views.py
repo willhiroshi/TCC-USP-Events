@@ -13,7 +13,7 @@ def event(request):
     START_DATE_PARAM = "start_date"
     END_DATE_PARAM = "end_date"
     TYPES_PARAM = "types"
-    LOCATIONLESS_PARAM: bool = "locationless"
+    LOCATIONLESS_PARAM = "locationless"
 
     if request.method == "GET":
         queryParams = request.query_params
