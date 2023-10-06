@@ -3,5 +3,5 @@ export const getAPIBaseUrl = () => {
     return 'http://localhost:9000';
   }
 
-  return 'http://uspevents.us.to/api';
+  return 'https://uspevents.ix.tc/api';
 };
