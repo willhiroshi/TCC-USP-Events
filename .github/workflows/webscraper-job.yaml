@@ -9,7 +9,6 @@ env:
   USERNAME: ${{ secrets.SERVER_USERNAME }}
   MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}/tcc/models
   SCRIPTS_PATH: /home/${{ secrets.SERVER_USERNAME }}/tcc/scripts
-  OPERATING_SYSTEM: arm64
   LOG_LEVEL: INFO
   FACEBOOK_EMAIL: ${{ secrets.FACEBOOK_EMAIL }}
   FACEBOOK_PASSWORD: ${{ secrets.FACEBOOK_PASSWORD }}
@@ -36,7 +35,7 @@ jobs:
 
       - name: Install python dependencies to run scripts
         run: |
-          cd backend
+          cd scripts
           bash initialize.sh
 
       - name: Install dependencies to run the cronjob and start cron service
@@ -63,7 +62,7 @@ jobs:
         run: |
           rm -rf ${{ env.SCRIPTS_PATH }}
           mkdir -p ${{ env.SCRIPTS_PATH }}
-          cp -r backend/scripts/* ${{ env.SCRIPTS_PATH }}
+          cp -r scripts/* ${{ env.SCRIPTS_PATH }}
 
       - name: Setup environment variables
         run: |
@@ -71,7 +70,6 @@ jobs:
           cat << EOF > .env
           API_BASE_URL=${{ env.API_BASE_URL }}
           MODEL_BASE_PATH=${{ env.MODEL_BASE_PATH }}
-          OPERATING_SYSTEM=${{ env.OPERATING_SYSTEM }}
           LOG_LEVEL=${{ env.LOG_LEVEL }}
           FACEBOOK_EMAIL=${{ env.FACEBOOK_EMAIL }}
           FACEBOOK_PASSWORD=${{ env.FACEBOOK_PASSWORD }}

@@ -11,23 +11,23 @@ logger = Logger(__name__)
 # posts = get_facebook_posts(facebook_page=facebook_page, num_posts=5)
 
 INSTAGRAM_PAGE = "https://www.instagram.com/usp.oficial/"
-posts = get_instagram_posts(instagram_page=INSTAGRAM_PAGE, num_posts=5)
-
 
 def get_process_posts() -> list[Post]:
+    raw_posts = get_instagram_posts(instagram_page=INSTAGRAM_PAGE, num_posts=5)
     processed_posts = []
-    for post in posts:
+    for raw_post in raw_posts:
         try:
-            post_link = {"post_link": post['post_link']}
-            processed_post: dict = process_post(post['post_text'])
+            post_link = {"post_link": raw_post.post_link}
+            processed_post: dict = process_post(raw_post.post_text)
             lat, lng = get_lat_lon_by_address(processed_post["address"])
             coords = {"lat": lat, "lng": lng}
 
             processed_post.update(coords)
             processed_post.update(post_link)
             processed_posts.append(processed_post)
-            logger.info(f"Post processed: {post}")
+            logger.info(f"Post processed: {raw_post}")
+
         except Exception as error:
-            logger.error(f"Error on processing post {post}. Error=[{error}]")
+            logger.error(f"Error on processing post {raw_post}. Error=[{error}]")
 
     return processed_posts
