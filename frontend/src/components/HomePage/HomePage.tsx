@@ -52,7 +52,7 @@ const HomePage = () => {
     isError: isEventsError,
     refetch: refetchEvents,
     isSuccess: isEventsSuccess
-  } = getEvents(startPeriod, endPeriod);
+  } = getEvents(startPeriod, endPeriod, 'False');
 
   useEffect(() => {
     refetchEvents();

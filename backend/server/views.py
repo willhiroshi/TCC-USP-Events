@@ -1,6 +1,5 @@
 import hashlib
 
-from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -14,6 +13,7 @@ def event(request):
     START_DATE_PARAM = "start_date"
     END_DATE_PARAM = "end_date"
     TYPES_PARAM = "types"
+    LOCATIONLESS_PARAM: bool = "locationless"
 
     if request.method == "GET":
         queryParams = request.query_params
@@ -22,6 +22,7 @@ def event(request):
         if START_DATE_PARAM in queryParams and END_DATE_PARAM in queryParams:
             start = queryParams[START_DATE_PARAM]
             end = queryParams[END_DATE_PARAM]
+
             events = events.filter(date__gte=start, date__lte=end)
 
         if TYPES_PARAM in queryParams:
@@ -35,6 +36,10 @@ def event(request):
                 )
 
             events = events.filter(type__in=requested_types)
+
+        if LOCATIONLESS_PARAM in queryParams:
+            latLngToFilter = eval(queryParams[LOCATIONLESS_PARAM])
+            events = events.filter(lat__isnull=latLngToFilter, lng__isnull=latLngToFilter)
 
         serializer = EventSerializer(events, many=True)
 
