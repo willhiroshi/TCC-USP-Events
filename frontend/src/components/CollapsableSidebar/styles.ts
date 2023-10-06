@@ -5,6 +5,7 @@ const styles = {
     pl: 3,
     gap: '5px',
     backgroundColor: isSelected ? 'rgba(0, 0, 0, 0.10)' : 'transparent',
+
     ':hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.10)'
     }

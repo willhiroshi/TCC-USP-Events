@@ -30,8 +30,8 @@ export const sidebarContainer = css`
 
 export const datePickerContainer = css`
   display: flex;
-  flex-direction: row;
   margin: 20px;
+  flex-direction: column;
   gap: 15px;
 `;
 

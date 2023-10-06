@@ -5,14 +5,14 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import React from 'react';
 import useHomeStore from '../../store/homeStore';
 import { FacebookEmbed } from 'react-social-media-embed';
-import { Divider, Link, Typography } from '@mui/material';
+import { Box, Divider, Link, Typography } from '@mui/material';
 import PlaceIcon from '@mui/icons-material/Place';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LinkIcon from '@mui/icons-material/Link';
 import IconText from '../IconText/IconText';
 
-const Sidebar = () => {
+const EventSidebar = () => {
   const startPeriod = useHomeStore((state) => state.startPeriod);
   const endPeriod = useHomeStore((state) => state.endPeriod);
 
@@ -21,20 +21,34 @@ const Sidebar = () => {
 
   const selectedEvent = useHomeStore((state) => state.selectedEvent);
 
+  const [openPicker, setOpenPicker] = React.useState<string | null>(null);
+  const defaultDateFormat = 'DD/MM/YYYY';
+
   return (
     <div className={styles.sidebarContainer}>
       <div className={styles.datePickerContainer}>
+        <Typography variant="h6">Período de eventos</Typography>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            label="Início"
-            value={startPeriod}
-            onChange={(newDate) => setStartPeriod(newDate!)}
-          />
-          <DatePicker
-            label="Fim"
-            value={endPeriod}
-            onChange={(newDate) => setEndPeriod(newDate!)}
-          />
+          <Box display="flex" flexDirection={{ xs: 'column', xl: 'row' }} gap={'20px'}>
+            <DatePicker
+              label="Início"
+              value={startPeriod}
+              onChange={(newDate) => setStartPeriod(newDate!)}
+              format={defaultDateFormat}
+              open={openPicker === 'start'}
+              onOpen={() => setOpenPicker('start')}
+              onClose={() => setOpenPicker(null)}
+            />
+            <DatePicker
+              label="Fim"
+              value={endPeriod}
+              onChange={(newDate) => setEndPeriod(newDate!)}
+              format={defaultDateFormat}
+              open={openPicker === 'end'}
+              onOpen={() => setOpenPicker('end')}
+              onClose={() => setOpenPicker(null)}
+            />
+          </Box>
         </LocalizationProvider>
       </div>
 
@@ -62,4 +76,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default EventSidebar;
