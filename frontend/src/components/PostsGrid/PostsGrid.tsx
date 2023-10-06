@@ -9,11 +9,11 @@ import { FacebookEmbed } from 'react-social-media-embed';
 import useEvents from '../../hooks/events/useEvents';
 import useHomeStore from '../../store/homeStore';
 
-const PostsGrid = () => {
+const LocationlessPostsGrid = () => {
   const startPeriod = useHomeStore((state) => state.startPeriod);
   const endPeriod = useHomeStore((state) => state.endPeriod);
   const { getEvents } = useEvents();
-  const { data: events } = getEvents(startPeriod, endPeriod);
+  const { data: events } = getEvents(startPeriod, endPeriod, 'True');
 
   moment().locale('pt-br');
   const eventsSortedByDate = events?.sort((a, b) => {
@@ -63,4 +63,4 @@ const PostsGrid = () => {
   );
 };
 
-export default PostsGrid;
+export default LocationlessPostsGrid;

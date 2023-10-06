@@ -6,7 +6,8 @@ export const body = css`
   width: 100%;
   display: flex;
   justify-content: center;
-  overflow-y: auto;
+  height: 100vh;
+  overflow-y: scroll;
 `;
 
 export const gridContainer = css`

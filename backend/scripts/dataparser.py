@@ -18,7 +18,7 @@ TOP_P = 0.95
 
 
 def process_post(post_text: str):
-    get_info = 'Colete informações sobre o evento acima: data no formato string DD/MM/2023 ou null, localização como string ou null, preço como number ou 0 e classifique como evento cultural ("culture"), esportivo ("sport") ou sem classificação ("unclassified"). Campos devem ser "date", "address", "price" e "type". Informe apenas os dados em um formato JSON, nada mais. Responda "Não é evento", caso não seja um evento. Resposta: \n'
+    get_info = 'Colete informações sobre o evento acima: data no formato string yyyy-mm-dd ou null, localização como string ou null, preço como number ou 0 e classifique como evento cultural ("culture"), esportivo ("sport") ou sem classificação ("unclassified"). Campos devem ser "date", "address", "price" e "type". Informe apenas os dados em um formato JSON, nada mais. Responda "Não é evento", caso não seja um evento. Resposta: \n'
     text_to_be_processed = "\n".join([post_text, get_info])
 
     try:

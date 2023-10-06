@@ -9,8 +9,10 @@ const useEvents = () => {
 
   const EVENTS_QUERY_KEY = 'events';
 
-  const getEvents = (startPeriod: Dayjs, endPeriod: Dayjs) =>
-    useQuery<Event[]>([EVENTS_QUERY_KEY], () => eventsRequester.getEvents(startPeriod, endPeriod));
+  const getEvents = (startPeriod: Dayjs, endPeriod: Dayjs, locationless: string) =>
+    useQuery<Event[]>([EVENTS_QUERY_KEY], () =>
+      eventsRequester.getEvents(startPeriod, endPeriod, locationless)
+    );
 
   return {
     getEvents
