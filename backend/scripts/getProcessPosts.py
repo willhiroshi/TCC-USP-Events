@@ -18,8 +18,8 @@ def get_process_posts() -> list[Post]:
     processed_posts = []
     for post in posts:
         try:
-            post_link = {"post_link": post.post_link}
-            processed_post: dict = process_post(post.post_text)
+            post_link = {"post_link": post['post_link']}
+            processed_post: dict = process_post(post['post_text'])
             lat, lng = get_lat_lon_by_address(processed_post["address"])
             coords = {"lat": lat, "lng": lng}
 
