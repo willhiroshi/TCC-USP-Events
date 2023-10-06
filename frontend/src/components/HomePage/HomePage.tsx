@@ -8,7 +8,7 @@ import React, { useEffect } from 'react';
 import { Event } from '../../types/event';
 import Loading from '../Loading/Loading';
 import ReloadButton from '../ReloadButton/ReloadButton';
-import Sidebar from '../Sidebar/Sidebar';
+import EventSidebar from '../EventSidebar/EventSidebar';
 import useHomeStore from '../../store/homeStore';
 
 const DEFAUL_ICON_SIZE: PointExpression = [25, 41];
@@ -97,7 +97,7 @@ const HomePage = () => {
           }
         })}
       </MapContainer>
-      <Sidebar />
+      <EventSidebar />
     </div>
   );
 };
