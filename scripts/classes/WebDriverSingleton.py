@@ -26,8 +26,7 @@ class WebDriverSingleton:
         else:
             chrome_options = Options()
 
-            chrome_options.user_data_dir = USER_DATA_DIR
-            chrome_options._user_data_dir = USER_DATA_DIR
+            chrome_options.add_argument(f"--user-data-dir={USER_DATA_DIR}")
             chrome_options.add_argument("--headless=new")
 
             service = Service(executable_path=CHROME_DRIVER_PATH)
