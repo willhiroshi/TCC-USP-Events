@@ -8,11 +8,17 @@ export class EventsRequester {
     this.baseURL = baseHost;
   }
 
-  getEvents = async (startPeriod: Dayjs, endPeriod: Dayjs, locationless: string) => {
+  getEvents = async (
+    startPeriod: Dayjs,
+    endPeriod: Dayjs,
+    typeFilter: string,
+    locationless: string
+  ) => {
     const params = new URLSearchParams();
     params.append('start_date', startPeriod.format('YYYY-MM-DD'));
     params.append('end_date', endPeriod.format('YYYY-MM-DD'));
     params.append('locationless', locationless);
+    typeFilter && params.append('types', typeFilter);
 
     const endpoint = `${this.baseURL}/events?${params.toString()}`;
     const requestParams = {

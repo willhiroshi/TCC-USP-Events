@@ -1,14 +1,17 @@
-import { css } from 'emotion';
+import { CSSProperties } from 'react';
 
-export const loadingContainer = css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
-`;
+const style: { [key: string]: CSSProperties } = {
+  loadingContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100vh'
+  },
+  homeContainer: {
+    display: 'flex',
+    flexDirection: 'row'
+  }
+};
 
-export const homeContainer = css`
-  display: flex;
-  flex-direction: row;
-`;
+export default style;

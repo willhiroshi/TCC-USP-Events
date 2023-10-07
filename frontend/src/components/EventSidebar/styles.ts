@@ -6,6 +6,8 @@ export const sidebarContainer = css`
   height: 100vh;
   overflow-y: scroll;
   flex-direction: column;
+  margin: 20px;
+  gap: 15px;
 
   ::-webkit-scrollbar {
     width: 10px;
@@ -26,31 +28,4 @@ export const sidebarContainer = css`
   ::-webkit-scrollbar-thumb:hover {
     background-color: #909090;
   }
-`;
-
-export const datePickerContainer = css`
-  display: flex;
-  margin: 20px;
-  flex-direction: column;
-  gap: 15px;
-`;
-
-export const eventInfoContainer = css`
-  display: flex;
-  margin: 20px;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-export const iconsEventInfoContainer = css`
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-`;
-
-export const textIcon = css`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
 `;

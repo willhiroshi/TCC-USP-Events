@@ -1,5 +1,5 @@
 import React from 'react';
-import * as styles from './styles';
+import styles from './styles';
 import { Typography } from '@mui/material';
 
 interface IconTextProps {
@@ -8,7 +8,7 @@ interface IconTextProps {
 }
 
 const IconText = ({ IconComponent, children }: IconTextProps) => (
-  <div className={styles.textIcon}>
+  <div style={styles.textIcon}>
     <IconComponent />
     <Typography>{children}</Typography>
   </div>
