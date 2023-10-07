@@ -15,7 +15,7 @@ def process_post(post_text: str):
     text_to_be_processed = "\n".join([post_text, get_info])
 
     try:
-        logger.info(f"Start processing post text: {post_text[:50]}...")
+        logger.info(f"Start processing post text: {post_text[:50]}...\n")
         llm = LlamaSingleton.getInstance()
 
         output = llm(text_to_be_processed, temperature=TEMPERATURE, top_p=TOP_P)
@@ -23,5 +23,5 @@ def process_post(post_text: str):
 
         return json.loads(processed_text)
     except Exception as error:
-        logger.error(f"Error on processing post. Error=[{error}]")
+        logger.error(f"Error on processing post. Error=[{error}]\n")
         return {}
