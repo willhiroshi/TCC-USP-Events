@@ -2,7 +2,7 @@ import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L, { PointExpression } from 'leaflet';
 import SearchField from '../SearchField/SearchField';
-import * as styles from './styles';
+import styles from './styles';
 import useEvents from '../../hooks/events/useEvents';
 import React, { useEffect } from 'react';
 import { Event } from '../../types/event';
@@ -60,14 +60,14 @@ const HomePage = () => {
 
   if (!isEventsSuccess)
     return (
-      <div className={styles.loadingContainer}>
+      <div style={styles.loadingContainer}>
         {isEventsLoading && <Loading />}
         {isEventsError && <ReloadButton onReload={refetchEvents} />}
       </div>
     );
 
   return (
-    <div className={styles.homeContainer}>
+    <div style={styles.homeContainer}>
       <MapContainer
         style={{ width: '100%', height: '100vh' }}
         center={[-23.559191, -46.725441]}

@@ -1,20 +1,22 @@
-import { css } from 'emotion';
+import { CSSProperties } from 'react';
 
-export const eventInfoContainer = css`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
+const styles: { [key: string]: CSSProperties } = {
+  eventInfoContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px'
+  },
+  iconsEventInfoContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '15px'
+  },
+  textIcon: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: '10px'
+  }
+};
 
-export const iconsEventInfoContainer = css`
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-`;
-
-export const textIcon = css`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-`;
+export default styles;

@@ -1,8 +1,12 @@
-import { css } from 'emotion';
+import { CSSProperties } from 'react';
 
-export const textIcon = css`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-`;
+const styles: { [key: string]: CSSProperties } = {
+  textIcon: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: '10px'
+  }
+};
+
+export default styles;

@@ -6,10 +6,10 @@ import { Box } from '@mui/material';
 import useHomeStore from '../../../../store/homeStore';
 
 interface DatesFilterProps {
-  className?: string;
+  style?: React.CSSProperties;
 }
 
-const DatesFilter = ({ className }: DatesFilterProps) => {
+const DatesFilter = ({ style }: DatesFilterProps) => {
   const startPeriod = useHomeStore((state) => state.startPeriod);
   const endPeriod = useHomeStore((state) => state.endPeriod);
 
@@ -20,7 +20,7 @@ const DatesFilter = ({ className }: DatesFilterProps) => {
   const defaultDateFormat = 'DD/MM/YYYY';
 
   return (
-    <div className={className}>
+    <div style={style}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Box display="flex" flexDirection={{ xs: 'column', xl: 'row' }} gap={'20px'}>
           <DatePicker

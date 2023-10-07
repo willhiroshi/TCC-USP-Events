@@ -1,11 +1,13 @@
-import { css } from 'emotion';
+const styles = {
+  wrapper: {
+    margin: '0',
+    padding: '0',
+    justifyContent: 'space-between',
+    width: '100%',
+    height: '100vh',
+    whiteSpace: 'nowrap',
+    gap: '0'
+  }
+};
 
-export const wrapper = css`
-  margin: 0px;
-  padding: 0px;
-  justify-content: space-between;
-  width: 100%;
-  height: 100vh;
-  white-space: nowrap;
-  gap: 0;
-`;
+export default styles;

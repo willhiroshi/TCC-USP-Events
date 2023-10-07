@@ -1,4 +1,4 @@
-import * as styles from './styles';
+import styles from './styles';
 import React from 'react';
 
 import { FacebookEmbed } from 'react-social-media-embed';
@@ -16,10 +16,10 @@ const EventsInformation = () => {
   if (!selectedEvent) return null;
 
   return (
-    <div className={styles.eventInfoContainer}>
+    <div style={styles.eventInfoContainer}>
       <Typography variant="h6">Informações do evento</Typography>
 
-      <div className={styles.iconsEventInfoContainer}>
+      <div style={styles.iconsEventInfoContainer}>
         <IconText IconComponent={PlaceIcon}>{selectedEvent?.address}</IconText>
         <IconText IconComponent={CalendarMonthIcon}>{selectedEvent?.date}</IconText>
         <IconText IconComponent={AttachMoneyIcon}>{selectedEvent?.price}</IconText>

@@ -1,5 +1,5 @@
 import React from 'react';
-import * as styles from './styles';
+import styles from './styles';
 import HomePage from '../HomePage/HomePage';
 import { Route, Routes } from 'react-router-dom';
 import LocationlessPostsGrid from '../PostsGrid/PostsGrid';
@@ -8,7 +8,7 @@ import { Box, CssBaseline } from '@mui/material';
 
 function App() {
   return (
-    <Box className={styles.wrapper}>
+    <Box sx={styles.wrapper}>
       <CssBaseline />
       <CollapsableSidebar />
       <Routes>
