@@ -1,22 +1,17 @@
-import getpass
 import time
 
-import undetected_chromedriver as uc
 from bs4 import BeautifulSoup
 from classes.Logger import Logger
+from classes.WebDriverSingleton import WebDriverSingleton
 from selenium.webdriver.common.by import By
 
 logger = Logger(__name__)
-username = getpass.getuser()
-
-CHROME_DRIVER_PATH = f"/home/{username}/.local/share/undetected_chromedriver/chromedriver_copy"
-
-driver = uc.Chrome(
-    use_subprocess=False, headless=True, driver_executable_path=CHROME_DRIVER_PATH
-)
 
 
 def get_facebook_posts(facebook_page: str, num_posts: int = 5):
+    # initialize driver
+    driver = WebDriverSingleton.getInstance()
+
     # open site
     driver.get(facebook_page)
     time.sleep(5)

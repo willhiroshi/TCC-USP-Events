@@ -1,0 +1,35 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  scripts-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        cd scripts
+        bash initialize.sh
+
+    - name: Setup environment variables
+      run: |
+        cd scripts
+        cp .env-sample .env
+
+    - name: Run tests
+      run: |
+        cd scripts
+        python3.10 -m unittest discover -s __tests__
