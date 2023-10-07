@@ -94,7 +94,7 @@ def get_instagram_posts(instagram_page: str, num_posts: int = 5) -> set[RawPost]
 
                 posts_content.add(
                     RawPost(
-                        post_text=_pre_process_post_text(post_text), post_link=post_link
+                        post_text=_pre_process_post_text(post_text), post_link=post_link, source='Instagram'
                     )
                 )
                 if len(posts_content) >= num_posts:

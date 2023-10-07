@@ -15,4 +15,5 @@ class EventSerializer(serializers.ModelSerializer):
             "lat",
             "lng",
             "type",
+            "source",
         ]

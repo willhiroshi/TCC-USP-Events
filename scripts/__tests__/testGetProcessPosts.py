@@ -22,7 +22,7 @@ class TestGetProcessPosts(unittest.TestCase):
         # mocks
         mock_get_links_on_database.return_value = []
 
-        mock_raw_post = RawPost(post_text="Text", post_link="http://mock.link")
+        mock_raw_post = RawPost(post_text="Text", post_link="http://mock.link", post_source='Mock Source')
         mock_get_instagram_posts.return_value = [mock_raw_post]
 
         mock_processed_post = {
@@ -48,6 +48,7 @@ class TestGetProcessPosts(unittest.TestCase):
                 "lat": "0",
                 "lng": "0",
                 "post_link": "http://mock.link",
+                "source": "Mock Source"
             }
         ]
 
@@ -72,7 +73,7 @@ class TestGetProcessPosts(unittest.TestCase):
         post_link = "http://mock.link"
         mock_get_links_on_database.return_value = [post_link]
 
-        mock_raw_post = RawPost(post_text="Text", post_link=post_link)
+        mock_raw_post = RawPost(post_text="Text", post_link=post_link, post_source='Mock Source')
         mock_get_instagram_posts.return_value = [mock_raw_post]
 
         # call function

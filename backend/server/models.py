@@ -16,3 +16,4 @@ class Event(models.Model):
     lat = models.CharField(max_length=25, null=True)
     lng = models.CharField(max_length=25, null=True)
     type = models.CharField(max_length=40, choices=EVENT_TYPES, default="unclassified")
+    source = models.CharField(max_length=20, null=True)
