@@ -12,7 +12,7 @@ import {
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
-import * as styles from './styles';
+import styles from './styles';
 
 interface Type {
   value: string;
@@ -24,7 +24,7 @@ interface Types {
 }
 
 interface TypeFilterProps {
-  className?: string;
+  style?: React.CSSProperties;
 }
 
 const typeOptions: Type[] = [
@@ -38,7 +38,7 @@ const typeOptions: Type[] = [
   }
 ];
 
-const TypesFilter = ({ className }: TypeFilterProps) => {
+const TypesFilter = ({ style }: TypeFilterProps) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [filter, setFilter] = React.useState('');
   const [types, setTypes] = React.useState<Types>(
@@ -58,12 +58,12 @@ const TypesFilter = ({ className }: TypeFilterProps) => {
   }, [filter, typeOptions]);
 
   return (
-    <div className={className}>
+    <div style={style}>
       <Button
+        sx={styles.filterButton}
         variant="text"
         onClick={(event) => setAnchorEl(event.currentTarget)}
         startIcon={<FilterListIcon />}
-        className={styles.filterButton}
       >
         {`Tipos${selectedFiltersCount > 0 ? ` (${selectedFiltersCount})` : ''}`}
       </Button>
@@ -81,9 +81,9 @@ const TypesFilter = ({ className }: TypeFilterProps) => {
           horizontal: 'center'
         }}
       >
-        <DialogContent className={styles.checkboxContainer}>
+        <DialogContent sx={styles.checkboxContainer}>
           <TextField
-            className={styles.filterInput}
+            sx={styles.filterInput}
             label="Filtro"
             value={filter}
             focused
@@ -114,7 +114,7 @@ const TypesFilter = ({ className }: TypeFilterProps) => {
               />
             ))
           ) : (
-            <p className={styles.noTypesText}>Sem tipos...</p>
+            <p style={styles.noTypesText}>Sem tipos...</p>
           )}
         </DialogContent>
       </Popover>
