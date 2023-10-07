@@ -1,30 +1,11 @@
-import getpass
 import re
 import time
 
 from classes.Logger import Logger
 from classes.Post import RawPost
+from classes.WebDriverSingleton import WebDriverSingleton
 from decouple import config
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-
-username = getpass.getuser()
-user_data_dir = f"/home/{username}/tcc/chrome_profiles/instagram"
-
-chrome_options = Options()
-
-chrome_options.user_data_dir = user_data_dir
-chrome_options._user_data_dir = user_data_dir
-chrome_options.add_argument("--headless=new")
-
-CHROME_DRIVER_PATH = (
-    f"/home/{username}/.local/share/undetected_chromedriver/chromedriver_copy"
-)
-service = Service(executable_path=CHROME_DRIVER_PATH)
-
-driver = webdriver.Chrome(service=service, options=chrome_options)
 
 INSTAGRAM_MAIN_PAGE = "https://www.instagram.com/"
 INSTAGRAM_EMAIL = config("INSTAGRAM_EMAIL")
@@ -40,6 +21,8 @@ def _pre_process_post_text(post_text: str) -> str:
 
 
 def _login(email: str, password: str) -> None:
+    driver = WebDriverSingleton.getInstance()
+
     email_input = driver.find_element(By.NAME, "username")
     email_input.send_keys(email)
 
@@ -51,6 +34,8 @@ def _login(email: str, password: str) -> None:
 
 
 def get_instagram_posts(instagram_page: str, num_posts: int = 5) -> set[RawPost]:
+    driver = WebDriverSingleton.getInstance()
+
     logger.info(f"Scraping Instagram page: {instagram_page}")
 
     # open site
