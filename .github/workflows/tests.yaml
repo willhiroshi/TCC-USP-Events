@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test:
+  scripts-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,6 +23,11 @@ jobs:
       run: |
         cd scripts
         bash initialize.sh
+
+    - name: Setup environment variables
+      run: |
+        cd scripts
+        cp .env-sample .env
 
     - name: Run tests
       run: |
