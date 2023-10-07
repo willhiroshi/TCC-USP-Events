@@ -36,7 +36,7 @@ def _login(email: str, password: str) -> None:
 def get_instagram_posts(instagram_page: str, num_posts: int = 5) -> set[RawPost]:
     driver = WebDriverSingleton.getInstance()
 
-    logger.info(f"Scraping Instagram page: {instagram_page}")
+    logger.info(f"Scraping Instagram page: {instagram_page}\n")
 
     # open site
     driver.get(INSTAGRAM_MAIN_PAGE)
@@ -47,7 +47,7 @@ def get_instagram_posts(instagram_page: str, num_posts: int = 5) -> set[RawPost]
         _login(INSTAGRAM_EMAIL, INSTAGRAM_PASSWORD)
         time.sleep(5)
     except:
-        logger.info("Login not necessary. Skipping login.")
+        logger.info("Login not necessary. Skipping login.\n")
 
     # open site
     driver.get(instagram_page)
@@ -81,7 +81,7 @@ def get_instagram_posts(instagram_page: str, num_posts: int = 5) -> set[RawPost]
 
                 # get post content information
                 post_link = post.get_attribute("href")
-                logger.info(f"[Post {len(posts_content)}] Post link: {post_link}")
+                logger.info(f"[Post {len(posts_content)}] Post link: {post_link}\n")
 
                 # get post text
                 post_text = driver.find_element(
@@ -89,7 +89,7 @@ def get_instagram_posts(instagram_page: str, num_posts: int = 5) -> set[RawPost]
                     "h1._aacl._aaco._aacu._aacx._aad7._aade",
                 ).text
                 logger.info(
-                    f"[Post {len(posts_content)}] Post text: {post_text[:30]}..."
+                    f"[Post {len(posts_content)}] Post text: {post_text[:30]}...\n"
                 )
 
                 posts_content.add(
@@ -106,7 +106,7 @@ def get_instagram_posts(instagram_page: str, num_posts: int = 5) -> set[RawPost]
 
             except Exception as error:
                 logger.error(
-                    f"Error clicking on post and gathering its information. ERROR=[{error}]"
+                    f"Error clicking on post and gathering its information. ERROR=[{error}]\n"
                 )
 
         # scroll down on page
@@ -115,6 +115,6 @@ def get_instagram_posts(instagram_page: str, num_posts: int = 5) -> set[RawPost]
 
     driver.quit()
 
-    logger.info(f"Posts obtained from Instagram page: {instagram_page}")
+    logger.info(f"Posts obtained from Instagram page: {instagram_page}\n")
 
     return posts_content

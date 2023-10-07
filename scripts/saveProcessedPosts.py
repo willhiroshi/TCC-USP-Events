@@ -16,6 +16,6 @@ for processedPost in processedPosts:
         f"{API_BASE_URL}/events", headers=header, json=processedPost
     )
     if response.status_code >= 300:
-        logger.error(f"Falha ao salvar post no banco {processedPost}")
+        logger.error(f"Failed to save post on database: {processedPost}\n")
     else:
-        logger.info(f"Post salvo com sucesso: {processedPost}")
+        logger.info(f"Post saved successfully: {processedPost}\n")
