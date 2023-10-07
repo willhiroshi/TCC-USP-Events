@@ -23,7 +23,7 @@ def get_facebook_posts(facebook_page: str, num_posts: int = 5):
         )
         close_button.click()
     except:
-        logger.info("Close button not found. Skipping click.")
+        logger.info("Close button not found. Skipping click.\n")
 
     # get limited number of posts
     posts_content = set()
@@ -39,7 +39,7 @@ def get_facebook_posts(facebook_page: str, num_posts: int = 5):
                 driver.execute_script("arguments[0].click();", button)
                 time.sleep(2)  # Wait for the expanded text to load
         except Exception as error:
-            logger.error(f"Error clicking on 'Ver mais' button. ERROR=[{error}]")
+            logger.error(f"Error clicking on 'Ver mais' button. ERROR=[{error}]\n")
 
         # find all posts
         page_source = driver.page_source
@@ -64,12 +64,12 @@ def get_facebook_posts(facebook_page: str, num_posts: int = 5):
                     },
                 )
                 post_link = post_time.get("href")
-                posts_content.add((post_text.text, post_link))
+                posts_content.add((post_text.text, post_link, 'Facebook'))
                 if len(posts_content) >= num_posts:
                     reach_maximum_posts = True
                     break
             except Exception as error:
-                logger.error(f"Did not find post's text\n${error}")
+                logger.error(f"Did not find post's text\n${error}\n")
 
         # scroll down on page
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")

@@ -7,6 +7,8 @@ logger = Logger(__name__)
 
 
 def get_lat_lon_by_address(address: str) -> tuple[str, str]:
+    if address == None:
+        return None, None
     try:
         geolocator = Nominatim(user_agent=APP_NAME)
         location = geolocator.geocode(address, country_codes="br")

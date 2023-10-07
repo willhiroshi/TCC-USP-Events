@@ -27,9 +27,11 @@ def get_process_posts() -> list[Post]:
             processed_post: dict = process_post(raw_post.post_text)
             lat, lng = get_lat_lon_by_address(processed_post["address"])
             coords = {"lat": lat, "lng": lng}
+            source = {"source": raw_post.post_source}
 
             processed_post.update(coords)
             processed_post.update(post_link)
+            processed_post.update(source)
             processed_posts.append(processed_post)
             logger.info(f"Post processed: {raw_post.post_text[:50]}, post_link: {raw_post.post_link[:50]}\n")
 
