@@ -3,13 +3,11 @@ import 'leaflet/dist/leaflet.css';
 import L, { PointExpression } from 'leaflet';
 import SearchField from '../SearchField/SearchField';
 import styles from './styles';
-import useEvents from '../../hooks/events/useEvents';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Event } from '../../types/event';
-import Loading from '../Loading/Loading';
-import ReloadButton from '../ReloadButton/ReloadButton';
 import EventSidebar from '../EventSidebar/EventSidebar';
 import useHomeStore from '../../store/homeStore';
+import { getEvents } from '../../hooks/events/useEvents';
 
 const DEFAUL_ICON_SIZE: PointExpression = [25, 41];
 const DEFAULT_ICON_ANCHOR: PointExpression = [12, 41];
@@ -45,26 +43,9 @@ const HomePage = () => {
   const selectedEvent = useHomeStore((state) => state.selectedEvent);
   const setSelectedEvent = useHomeStore((state) => state.setSelectedEvent);
 
-  const { getEvents } = useEvents();
-  const {
-    data: events,
-    isLoading: isEventsLoading,
-    isError: isEventsError,
-    refetch: refetchEvents,
-    isSuccess: isEventsSuccess
-  } = getEvents(startPeriod, endPeriod, 'False');
+  const typeFilter = useHomeStore((state) => state.typeFilter);
 
-  useEffect(() => {
-    refetchEvents();
-  }, [startPeriod, endPeriod]);
-
-  if (!isEventsSuccess)
-    return (
-      <div style={styles.loadingContainer}>
-        {isEventsLoading && <Loading />}
-        {isEventsError && <ReloadButton onReload={refetchEvents} />}
-      </div>
-    );
+  const { data: events } = getEvents(startPeriod, endPeriod, typeFilter, 'False');
 
   return (
     <div style={styles.homeContainer}>

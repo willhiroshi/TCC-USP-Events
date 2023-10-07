@@ -7,7 +7,7 @@ const styles = {
   checkboxContainer: {
     display: 'flex',
     flexDirection: 'column',
-    padding: '15px'
+    padding: '20px'
   },
   filterInput: {
     marginBottom: '15px',
@@ -17,6 +17,11 @@ const styles = {
   noTypesText: {
     color: 'gray',
     fontStyle: 'italic'
+  },
+  finalButtons: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: '15px'
   }
 };
 

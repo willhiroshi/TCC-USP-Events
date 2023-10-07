@@ -6,14 +6,16 @@ import React from 'react';
 import moment from 'moment';
 import 'moment/locale/pt';
 import { FacebookEmbed } from 'react-social-media-embed';
-import useEvents from '../../hooks/events/useEvents';
+import { getEvents } from '../../hooks/events/useEvents';
 import useHomeStore from '../../store/homeStore';
 
 const LocationlessPostsGrid = () => {
   const startPeriod = useHomeStore((state) => state.startPeriod);
   const endPeriod = useHomeStore((state) => state.endPeriod);
-  const { getEvents } = useEvents();
-  const { data: events } = getEvents(startPeriod, endPeriod, 'True');
+
+  const typeFilter = useHomeStore((state) => state.typeFilter);
+
+  const { data: events } = getEvents(startPeriod, endPeriod, typeFilter, 'True');
 
   moment().locale('pt-br');
   const eventsSortedByDate = events?.sort((a, b) => {

@@ -7,12 +7,14 @@ import {
   DialogContent,
   TextField,
   InputAdornment,
-  IconButton
+  IconButton,
+  Divider
 } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import styles from './styles';
+import useHomeStore from '../../../../store/homeStore';
 
 interface Type {
   value: string;
@@ -41,12 +43,40 @@ const typeOptions: Type[] = [
 const TypesFilter = ({ style }: TypeFilterProps) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const [filter, setFilter] = React.useState('');
-  const [types, setTypes] = React.useState<Types>(
-    typeOptions.reduce((acc, type) => ({ ...acc, [type.value]: false }), {})
-  );
+  const [tempTypes, setTempTypes] = React.useState<Types>({});
+
+  const storedTypes = localStorage.getItem('selectedTypes');
+  const initialTypes = storedTypes
+    ? JSON.parse(storedTypes)
+    : typeOptions.reduce((acc, type) => ({ ...acc, [type.value]: false }), {});
+  const [types, setTypes] = React.useState<Types>(initialTypes);
+
+  const setTypeFilter = useHomeStore((state) => state.setTypeFilter);
+
+  React.useEffect(() => {
+    setTempTypes(types);
+  }, [types]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTypes({ ...types, [event.target.name]: event.target.checked });
+    setTempTypes({ ...tempTypes, [event.target.name]: event.target.checked });
+  };
+
+  const handleApply = () => {
+    setTypes(tempTypes);
+    setAnchorEl(null);
+
+    const selectedTypes = Object.entries(tempTypes)
+      .filter(([, value]) => value)
+      .map(([key]) => key);
+
+    const selectedTypesString = selectedTypes.join(',');
+    setTypeFilter(selectedTypesString);
+
+    localStorage.setItem('selectedTypes', JSON.stringify(tempTypes));
+  };
+
+  const handleClear = () => {
+    setTempTypes(typeOptions.reduce((acc, type) => ({ ...acc, [type.value]: false }), {}));
   };
 
   const selectedFiltersCount = React.useMemo(() => {
@@ -103,12 +133,17 @@ const TypesFilter = ({ style }: TypeFilterProps) => {
               )
             }}
           />
+
           {filteredTypes.length > 0 ? (
             filteredTypes.map((type) => (
               <FormControlLabel
                 key={type.value}
                 control={
-                  <Checkbox checked={types[type.value]} onChange={handleChange} name={type.value} />
+                  <Checkbox
+                    checked={tempTypes[type.value]}
+                    onChange={handleChange}
+                    name={type.value}
+                  />
                 }
                 label={type.label}
               />
@@ -116,6 +151,16 @@ const TypesFilter = ({ style }: TypeFilterProps) => {
           ) : (
             <p style={styles.noTypesText}>Sem tipos...</p>
           )}
+          <Divider />
+
+          <div style={styles.finalButtons}>
+            <Button variant="outlined" onClick={handleClear}>
+              Limpar
+            </Button>
+            <Button variant="contained" onClick={handleApply}>
+              Aplicar
+            </Button>
+          </div>
         </DialogContent>
       </Popover>
     </div>
