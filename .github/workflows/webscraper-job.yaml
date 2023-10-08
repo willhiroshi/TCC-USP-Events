@@ -9,6 +9,7 @@ env:
   USERNAME: ${{ secrets.SERVER_USERNAME }}
   MODEL_BASE_PATH: /home/${{ secrets.SERVER_USERNAME }}/tcc/models
   SCRIPTS_PATH: /home/${{ secrets.SERVER_USERNAME }}/tcc/scripts
+  CRONLOGS_PATH: /home/${{ secrets.SERVER_USERNAME }}/tcc
   LOG_LEVEL: INFO
   FACEBOOK_EMAIL: ${{ secrets.FACEBOOK_EMAIL }}
   FACEBOOK_PASSWORD: ${{ secrets.FACEBOOK_PASSWORD }}
@@ -80,5 +81,5 @@ jobs:
       - name: Delete existent cronjobs and add new one
         run: |
           crontab -r || true
-          echo '0 */6 * * * python3.10 "${{ env.SCRIPTS_PATH }}/saveProcessedPosts.py" >> ${{ env.SCRIPTS_PATH }}/cronjob_log.txt 2>&1' > mycron
+          echo '0 */6 * * * python3.10 "${{ env.SCRIPTS_PATH }}/saveProcessedPosts.py" >> ${{ env.CRONLOGS_PATH }}/cronjob_log.txt 2>&1' > mycron
           crontab mycron
