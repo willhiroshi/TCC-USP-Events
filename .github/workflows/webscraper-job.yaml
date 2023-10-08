@@ -55,7 +55,7 @@ jobs:
             echo "Chromium chromedriver version 85.0.4183.83 is already installed."
           fi
 
-          cp /usr/bin/chromedriver /home/${{ env.USERNAME }}/.local/share/undetected_chromedriver/chromedriver_copy
+          cp /usr/bin/chromedriver /home/${{ env.USERNAME }}/tcc/chromedriver
           sudo apt install cron -y
           sudo systemctl enable cron
 

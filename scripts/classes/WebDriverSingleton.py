@@ -6,9 +6,7 @@ from selenium.webdriver.chrome.service import Service
 
 username = getpass.getuser()
 USER_DATA_DIR = f"/home/{username}/tcc/chrome_profiles/tcc_profile"
-CHROME_DRIVER_PATH = (
-    f"/home/{username}/.local/share/undetected_chromedriver/chromedriver_copy"
-)
+CHROME_DRIVER_PATH = f"/home/{username}/tcc/chromedriver"
 
 
 class WebDriverSingleton:
@@ -27,7 +25,7 @@ class WebDriverSingleton:
             chrome_options = Options()
 
             chrome_options.add_argument(f"--user-data-dir={USER_DATA_DIR}")
-            chrome_options.add_argument("--headless=new")
+            chrome_options.add_argument("--headless=true")
 
             service = Service(executable_path=CHROME_DRIVER_PATH)
             WebDriverSingleton._instance = webdriver.Chrome(
