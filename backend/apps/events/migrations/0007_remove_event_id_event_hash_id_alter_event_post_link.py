@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('server', '0006_alter_event_post_link'),
+        ('events', '0006_alter_event_post_link'),
     ]
 
     operations = [

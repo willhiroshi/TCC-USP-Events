@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('server', '0004_event_lat_event_lng'),
+        ('events', '0004_event_lat_event_lng'),
     ]
 
     operations = [
