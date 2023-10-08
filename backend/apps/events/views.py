@@ -28,7 +28,11 @@ def event(request):
         if TYPES_PARAM in queryParams:
             requested_types = queryParams[TYPES_PARAM].split(",")
 
-            invalid_types = [type for type in requested_types if type not in dict(Event.EVENT_TYPES).keys()]
+            invalid_types = [
+                type
+                for type in requested_types
+                if type not in dict(Event.EVENT_TYPES).keys()
+            ]
             if invalid_types:
                 return Response(
                     {"error": f"Invalid event type(s): {', '.join(invalid_types)}"},
@@ -39,7 +43,9 @@ def event(request):
 
         if LOCATIONLESS_PARAM in queryParams:
             latLngToFilter = eval(queryParams[LOCATIONLESS_PARAM])
-            events = events.filter(lat__isnull=latLngToFilter, lng__isnull=latLngToFilter)
+            events = events.filter(
+                lat__isnull=latLngToFilter, lng__isnull=latLngToFilter
+            )
 
         serializer = EventSerializer(events, many=True)
 

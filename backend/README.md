@@ -25,6 +25,12 @@ bash runServer.sh <server_port>
 
 The server will run on port 9000 by default if you don't provide any `server_port`.
 
-# Scripts
+# Creating a new app
 
-There are several scripts in the `scripts` folder used to populate the database with upcoming events. It is necessary to create a `.env` file in the root folder of the backend for them to work correctly. Use the `.env-sample` file to help you set the necessary environment variables.
+If you would like to create a new app, just run the following command on the root directory:
+
+```bash
+python3.10 manage.py startapp <app_name> apps/<app_name>
+```
+
+You may need to modify the `INSTALLED_APPS` variable on `api/settings.py` file to include the new app, and also change the apps' name on `apps/<app_name>/apps.py` file.

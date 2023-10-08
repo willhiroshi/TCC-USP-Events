@@ -4,7 +4,7 @@
 port="${1:-9000}"
 
 # make necessary migrations
-python3.10 manage.py makemigrations server
+python3.10 manage.py makemigrations
 python3.10 manage.py migrate
 
 # run the server on specified port
