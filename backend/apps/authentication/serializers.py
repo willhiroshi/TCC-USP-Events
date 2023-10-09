@@ -6,7 +6,7 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "name", "email", "password"]
+        fields = ["id", "name", "username", "email", "password"]
         extra_kwargs = {"password": {"write_only": True}}
 
     # override create method to hash password
@@ -18,3 +18,10 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+    def validate_username(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError(
+                "Username cannot be the same as an email."
+            )
+        return value

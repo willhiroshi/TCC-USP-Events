@@ -81,6 +81,7 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = "authentication.User"
+AUTHENTICATION_BACKENDS = ['apps.authentication.backends.EmailOrUsernameModelBackend']
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
