@@ -10,5 +10,5 @@ class User(AbstractUser):
     password = models.CharField(max_length=100, blank=False)
     name = models.CharField(max_length=100, blank=False)
 
-    # no additional fields required for user creation
+    # no additional fields required for user creation via manage.py
     REQUIRED_FIELDS = []

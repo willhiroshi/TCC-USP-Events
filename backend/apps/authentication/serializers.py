@@ -20,7 +20,9 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
     def validate_username(self, value):
-        if User.objects.filter(email=value).exists():
+        if User.objects.filter(email=value).exists() or value == self.initial_data.get(
+            "email"
+        ):
             raise serializers.ValidationError(
                 "Username cannot be the same as an email."
             )
