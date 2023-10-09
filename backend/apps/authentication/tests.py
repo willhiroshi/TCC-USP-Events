@@ -60,9 +60,33 @@ class LogoutViewTestCase(TestCase):
         self.refresh = str(RefreshToken.for_user(self.user))
 
     def test_logout_with_valid_refresh_token(self):
-        response = self.client.post(reverse("token_invalidate"), {"refresh": str(self.refresh)})
+        response = self.client.post(
+            reverse("token_invalidate"), {"refresh": str(self.refresh)}
+        )
         self.assertEqual(response.status_code, status.HTTP_205_RESET_CONTENT)
 
     def test_logout_with_invalid_refresh_token(self):
-        response = self.client.post(reverse("token_invalidate"), {"refresh": "invalid_token"})
+        response = self.client.post(
+            reverse("token_invalidate"), {"refresh": "invalid_token"}
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteUserViewTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            email="test@example.com", password="test_password", username="test_user"
+        )
+        self.client.force_authenticate(user=self.user)
+        self.delete_user_url = reverse("delete_user")
+
+    def test_delete_user_with_authenticated_request(self):
+        response = self.client.delete(self.delete_user_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(User.objects.filter(email=self.user.email).exists())
+
+    def test_delete_user_with_unauthenticated_request(self):
+        self.client.logout()
+        response = self.client.delete(self.delete_user_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
