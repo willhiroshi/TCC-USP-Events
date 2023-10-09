@@ -7,13 +7,15 @@ import EventsInformation from './components/EventsInformation/EventsInformation'
 
 const EventSidebar = () => {
   return (
-    <div className={styles.sidebarContainer}>
-      <Typography variant="h6">Filtros de eventos</Typography>
-      <DatesFilter />
-      <TypesFilter />
-      <Divider />
+    <div className={styles.scrollbar}>
+      <div className={styles.sidebarContainer}>
+        <Typography variant="h6">Filtros de eventos</Typography>
+        <DatesFilter />
+        <TypesFilter />
+        <Divider />
 
-      <EventsInformation />
+        <EventsInformation />
+      </div>
     </div>
   );
 };

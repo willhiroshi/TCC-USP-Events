@@ -1,13 +1,9 @@
 import { css } from 'emotion';
 
-export const sidebarContainer = css`
-  display: flex;
-  width: 30%;
-  height: 100vh;
+export const scrollbar = css`
   overflow-y: scroll;
-  flex-direction: column;
-  margin: 20px;
-  gap: 15px;
+  height: 100vh;
+  width: 30%;
 
   ::-webkit-scrollbar {
     width: 10px;
@@ -28,4 +24,11 @@ export const sidebarContainer = css`
   ::-webkit-scrollbar-thumb:hover {
     background-color: #909090;
   }
+`;
+
+export const sidebarContainer = css`
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+  gap: 15px;
 `;
