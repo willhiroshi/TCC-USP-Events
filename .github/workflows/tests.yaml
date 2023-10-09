@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  scripts-test:
+  scripts-tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -33,3 +33,30 @@ jobs:
       run: |
         cd scripts
         python3.10 -m unittest discover -s __tests__
+
+  backend-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        cd backend
+        bash initialize.sh
+
+    - name: Setup environment variables
+      run: |
+        cd backend
+        cp .env-sample .env
+
+    - name: Run tests
+      run: |
+        cd backend
+        python3.10 manage.py test
