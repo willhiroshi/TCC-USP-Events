@@ -6,4 +6,6 @@ export interface Event {
   date?: string;
   price?: string;
   hashId: string;
+  type?: string;
+  source?: string;
 }
