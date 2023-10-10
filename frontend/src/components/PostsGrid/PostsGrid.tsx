@@ -5,7 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import moment from 'moment';
 import 'moment/locale/pt';
-import { FacebookEmbed } from 'react-social-media-embed';
+import { FacebookEmbed, InstagramEmbed } from 'react-social-media-embed';
 import { getEvents } from '../../hooks/events/useEvents';
 import useHomeStore from '../../store/homeStore';
 
@@ -54,7 +54,11 @@ const LocationlessPostsGrid = () => {
                   className={styles.cardHeader}
                 />
                 <CardContent className={styles.cardContent} style={{ padding: 0 }}>
-                  <FacebookEmbed url={event.postLink as string} width={'100%'} />
+                  {event.source == 'Instagram' ? (
+                    <InstagramEmbed url={event.postLink} width={'100%'} />
+                  ) : (
+                    <FacebookEmbed url={event.postLink} width={'100%'} />
+                  )}
                 </CardContent>
               </CardActionArea>
             </Card>

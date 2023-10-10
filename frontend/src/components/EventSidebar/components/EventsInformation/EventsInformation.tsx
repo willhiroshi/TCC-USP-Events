@@ -1,7 +1,7 @@
 import styles from './styles';
 import React from 'react';
 
-import { FacebookEmbed } from 'react-social-media-embed';
+import { FacebookEmbed, InstagramEmbed } from 'react-social-media-embed';
 import { Link, Typography } from '@mui/material';
 import PlaceIcon from '@mui/icons-material/Place';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -30,7 +30,11 @@ const EventsInformation = () => {
         </IconText>
       </div>
 
-      <FacebookEmbed url={selectedEvent.postLink} width={'100%'} linkText="Carregando Evento" />
+      {selectedEvent.source == 'Instagram' ? (
+        <InstagramEmbed url={selectedEvent.postLink} width={'100%'} linkText="Carregando Evento" />
+      ) : (
+        <FacebookEmbed url={selectedEvent.postLink} width={'100%'} linkText="Carregando Evento" />
+      )}
     </div>
   );
 };
