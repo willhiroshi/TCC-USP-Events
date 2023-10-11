@@ -17,6 +17,12 @@ const styles = {
   sidebarButtonText: {
     color: 'black',
     fontSize: '12px'
+  },
+  listItemsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    height: '100%'
   }
 };
 

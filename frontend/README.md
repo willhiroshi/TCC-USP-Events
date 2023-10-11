@@ -7,6 +7,10 @@ Start by installing the necessary dependencies running the command:
 npm install
 ```
 
+# Environment variables
+
+This project needs to use environment variables to work properly. You can find the variables in the `.env.sample` file. Create a `.env` file and copy the variables from the example file. Then, fill the variables with the correct values.
+
 ## Available Scripts
 
 In the project directory, you can run:
