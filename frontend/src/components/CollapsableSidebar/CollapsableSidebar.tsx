@@ -10,9 +10,10 @@ import { Typography } from '@mui/material';
 import CollapsableSideBarData from '../CollapsableSideBarData/CollapsableSideBarData';
 import { KeyboardDoubleArrowLeft, KeyboardDoubleArrowRight } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
-import Drawer from './ components/Drawer/Drawer';
-import DrawerHeader from './ components/DrawerHeader/DrawerHeader';
+import Drawer from './components/Drawer/Drawer';
+import DrawerHeader from './components/DrawerHeader/DrawerHeader';
 import styles from './styles';
+import ProfileItem from './components/ProfileItem/ProfileItem';
 
 const CollapsableSidebar = () => {
   const [isSideBarOpen, setIsSideBarOpen] = useState<boolean>(false);
@@ -36,23 +37,29 @@ const CollapsableSidebar = () => {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <List disablePadding>
-          {buttonsList.map((item, index) => (
-            <Link to={item.path} key={index} style={{ textDecoration: 'none' }}>
-              <ListItem disablePadding sx={{ display: 'block' }}>
-                <ListItemButton
-                  disableTouchRipple
-                  sx={styles.sidebarButton(location.pathname === item.path)}
-                >
-                  <ListItemIcon sx={styles.sidebarIcon}>{item.icon}</ListItemIcon>
-                  {isSideBarOpen && (
-                    <Typography sx={styles.sidebarButtonText}>{item.title}</Typography>
-                  )}
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          ))}
-        </List>
+        <Box sx={styles.listItemsContainer}>
+          <List disablePadding>
+            {buttonsList.map((item, index) => (
+              <Link to={item.path} key={index} style={{ textDecoration: 'none' }}>
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                  <ListItemButton
+                    disableTouchRipple
+                    sx={styles.sidebarButton(location.pathname === item.path)}
+                  >
+                    <ListItemIcon sx={styles.sidebarIcon}>{item.icon}</ListItemIcon>
+                    {isSideBarOpen && (
+                      <Typography sx={styles.sidebarButtonText}>{item.title}</Typography>
+                    )}
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+          <Box>
+            <Divider />
+            <ProfileItem isSideBarOpen={isSideBarOpen}></ProfileItem>
+          </Box>
+        </Box>
       </Drawer>
     </Box>
   );
