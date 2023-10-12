@@ -2,24 +2,26 @@ import React, { useState } from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import LoginIcon from '@mui/icons-material/Login';
 import { Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AccountCircle } from '@mui/icons-material';
 import styles from './styles';
 import LoginModal from '../../../LoginModal/LoginModal';
+import useUserStore from '../../../../store/userStore';
 
 interface ProfileItemProps {
   isSideBarOpen: boolean;
 }
 
 const ProfileItem = ({ isSideBarOpen }: ProfileItemProps) => {
-  const isLoggedIn = false;
+  const user = useUserStore((state) => state.user);
 
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const navigate = useNavigate();
 
   const handleProfileClick = () => {
-    if (!isLoggedIn) {
+    if (!user) {
       setOpenLoginModal(true);
     } else {
       navigate('/profile');
@@ -35,15 +37,15 @@ const ProfileItem = ({ isSideBarOpen }: ProfileItemProps) => {
       <ListItem disablePadding sx={{ display: 'block' }}>
         <ListItemButton disableTouchRipple sx={styles.listItemButton} onClick={handleProfileClick}>
           <ListItemIcon sx={styles.profileIcon}>
-            <AccountCircle fontSize="large" />
+            {!user ? <LoginIcon fontSize="large" /> : <AccountCircle fontSize="large" />}
           </ListItemIcon>
           {isSideBarOpen &&
-            (!isLoggedIn ? (
+            (!user ? (
               <Typography sx={styles.loginRegisterText}>Entrar ou Registrar</Typography>
             ) : (
               <Box>
-                <Typography sx={styles.usernameText}>willhiroshi</Typography>
-                <Typography sx={styles.nameText}>Willian Hiroshi</Typography>
+                <Typography sx={styles.usernameText}>{user.username}</Typography>
+                <Typography sx={styles.nameText}>{user.name}</Typography>
               </Box>
             ))}
         </ListItemButton>
