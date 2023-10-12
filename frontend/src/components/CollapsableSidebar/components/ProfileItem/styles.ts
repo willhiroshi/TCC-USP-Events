@@ -8,6 +8,10 @@ const styles = {
     color: 'gray',
     fontSize: '12px'
   },
+  loginRegisterText: {
+    color: 'black',
+    fontSize: '12px'
+  },
   profileIcon: {
     minWidth: 0,
     justifyContent: 'center'

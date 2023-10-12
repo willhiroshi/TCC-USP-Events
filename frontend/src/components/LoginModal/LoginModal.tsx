@@ -10,16 +10,16 @@ export enum LoginModalTabs {
   REGISTER = 'Register'
 }
 
-const LoginModal = () => {
+interface LoginModalProps {
+  open: boolean;
+  handleClose: () => void;
+}
+
+const LoginModal = ({ open, handleClose }: LoginModalProps) => {
   const [activeTab, setActiveTab] = useState<LoginModalTabs>(LoginModalTabs.LOGIN);
-  const [open, setOpen] = useState<boolean>(true);
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: LoginModalTabs) => {
     setActiveTab(newValue);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
