@@ -6,12 +6,19 @@ import { Box, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { AccountCircle } from '@mui/icons-material';
 import styles from './styles';
+import LoginModal from '../../../LoginModal/LoginModal';
 
 interface ProfileItemProps {
   isSideBarOpen: boolean;
 }
 
 const ProfileItem = ({ isSideBarOpen }: ProfileItemProps) => {
+  const isLoggedIn = false;
+
+  if (!isLoggedIn) {
+    return <LoginModal />;
+  }
+
   return (
     <Link to="/profile" style={{ textDecoration: 'none' }}>
       <ListItem disablePadding sx={{ display: 'block' }}>
