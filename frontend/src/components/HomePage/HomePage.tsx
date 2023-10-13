@@ -7,7 +7,8 @@ import React from 'react';
 import { Event } from '../../types/event';
 import EventSidebar from '../EventSidebar/EventSidebar';
 import useHomeStore from '../../store/homeStore';
-import { getEvents } from '../../hooks/events/useEvents';
+import useEvents from '../../hooks/events/useEvents';
+import useAxios from '../../hooks/axios/useAxios';
 
 const DEFAUL_ICON_SIZE: PointExpression = [25, 41];
 const DEFAULT_ICON_ANCHOR: PointExpression = [12, 41];
@@ -45,6 +46,7 @@ const HomePage = () => {
 
   const typeFilter = useHomeStore((state) => state.typeFilter);
 
+  const { getEvents } = useEvents();
   const { data: events } = getEvents(startPeriod, endPeriod, typeFilter, 'False');
 
   return (

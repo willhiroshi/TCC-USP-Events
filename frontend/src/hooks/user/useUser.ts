@@ -1,15 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
-import { UserRequester } from './UserRequester';
-import { getAPIBaseUrl } from '../../utils';
+import { getAPIBaseUrl } from '../../utils/utils';
 import { Authentication } from '../../types/authentication';
 import { LoginRequest, RegisterRequest } from './types';
 import { User } from '../../types/user';
 import useUserStore, { AUTH_TOKENS_KEY } from '../../store/userStore';
 import jwtDecode from 'jwt-decode';
-
-const userRequester = new UserRequester(getAPIBaseUrl());
+import useUserRequester from './useUserRequester';
 
 const useUser = () => {
+  const userRequester = useUserRequester(getAPIBaseUrl());
+
   const setAuthTokens = useUserStore((state) => state.setAuthTokens);
   const setUser = useUserStore((state) => state.setUser);
 
