@@ -8,7 +8,6 @@ import { Event } from '../../types/event';
 import EventSidebar from '../EventSidebar/EventSidebar';
 import useHomeStore from '../../store/homeStore';
 import useEvents from '../../hooks/events/useEvents';
-import useAxios from '../../hooks/axios/useAxios';
 
 const DEFAUL_ICON_SIZE: PointExpression = [25, 41];
 const DEFAULT_ICON_ANCHOR: PointExpression = [12, 41];
