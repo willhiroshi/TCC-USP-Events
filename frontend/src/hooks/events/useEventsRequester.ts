@@ -1,14 +1,11 @@
 import { Dayjs } from 'dayjs';
 import camelcaseKeys from 'camelcase-keys';
+import useAxios from '../axios/useAxios';
 
-export class EventsRequester {
-  private readonly baseURL: string;
+export const useEventsRequester = (baseURL: string) => {
+  const axiosInstance = useAxios(baseURL);
 
-  constructor(baseHost: string) {
-    this.baseURL = baseHost;
-  }
-
-  getEvents = async (
+  const getEvents = async (
     startPeriod: Dayjs,
     endPeriod: Dayjs,
     typeFilter: string,
@@ -20,13 +17,11 @@ export class EventsRequester {
     params.append('locationless', locationless);
     typeFilter && params.append('types', typeFilter);
 
-    const endpoint = `${this.baseURL}/events?${params.toString()}`;
-    const requestParams = {
-      method: 'GET'
-    };
+    const endpoint = `/events?${params.toString()}`;
 
-    const response = await fetch(endpoint, requestParams);
-    const apiResponse = await response.json();
-    return camelcaseKeys(apiResponse.data, { deep: true });
+    const response = await axiosInstance.get(endpoint);
+    return camelcaseKeys(response.data.data, { deep: true });
   };
-}
+
+  return { getEvents };
+};

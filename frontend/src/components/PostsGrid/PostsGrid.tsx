@@ -6,7 +6,7 @@ import React from 'react';
 import moment from 'moment';
 import 'moment/locale/pt';
 import { FacebookEmbed, InstagramEmbed } from 'react-social-media-embed';
-import { getEvents } from '../../hooks/events/useEvents';
+import useEvents from '../../hooks/events/useEvents';
 import useHomeStore from '../../store/homeStore';
 
 const LocationlessPostsGrid = () => {
@@ -15,6 +15,7 @@ const LocationlessPostsGrid = () => {
 
   const typeFilter = useHomeStore((state) => state.typeFilter);
 
+  const { getEvents } = useEvents();
   const { data: events } = getEvents(startPeriod, endPeriod, typeFilter, 'True');
 
   moment().locale('pt-br');

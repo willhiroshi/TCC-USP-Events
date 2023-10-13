@@ -38,12 +38,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     # Third-party
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
-
     # Apps
     "apps.events",
     "apps.authentication",
@@ -81,7 +79,7 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = "authentication.User"
-AUTHENTICATION_BACKENDS = ['apps.authentication.backends.EmailOrUsernameModelBackend']
+AUTHENTICATION_BACKENDS = ["apps.authentication.backends.EmailOrUsernameModelBackend"]
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",

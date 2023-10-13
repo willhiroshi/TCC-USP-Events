@@ -57,7 +57,7 @@ const CollapsableSidebar = () => {
           </List>
           <Box>
             <Divider />
-            <ProfileItem isSideBarOpen={isSideBarOpen}></ProfileItem>
+            <ProfileItem isSideBarOpen={isSideBarOpen} />
           </Box>
         </Box>
       </Drawer>
