@@ -26,16 +26,23 @@ const useAxios = (baseURL: string) => {
       const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
       if (!isExpired) return req;
 
-      const response = await axios.post(`${baseAuthUrl}/auth/token/refresh`, {
-        refresh: authTokens.refresh
-      });
+      await axios
+        .post(`${baseAuthUrl}/auth/token/refresh`, {
+          refresh: authTokens.refresh
+        })
+        .then((response) => {
+          localStorage.setItem('authTokens', JSON.stringify(response.data));
+          setAuthTokens(response.data);
+          setUser(jwt_decode(response.data.access));
 
-      localStorage.setItem('authTokens', JSON.stringify(response.data));
-      setAuthTokens(response.data);
-      setUser(jwt_decode(response.data.access));
-
-      req.headers.Authorization = `Bearer ${response.data.access}`;
-      return req;
+          req.headers.Authorization = `Bearer ${response.data.access}`;
+          return req;
+        })
+        .catch(() => {
+          localStorage.removeItem('authTokens');
+          setAuthTokens(null);
+          setUser(null);
+        });
     }
 
     return req;

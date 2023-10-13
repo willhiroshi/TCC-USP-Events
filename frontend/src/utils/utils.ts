@@ -11,5 +11,5 @@ export const getAuthAPIBaseUrl = () => {
     return 'http://localhost:9000';
   }
 
-  return 'https://uspevents.ix.tc/auth';
+  return 'https://uspevents.ix.tc/api';
 };
