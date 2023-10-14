@@ -1,20 +1,27 @@
 import React from 'react';
-import { Button, DialogActions } from '@mui/material';
+
 import styles from './styles';
+import Button from '@mui/joy/Button';
+import DialogActions from '@mui/joy/DialogActions';
 
 interface ActionButtonsProps {
   submitButtonLabel: string;
+  submitButtonLoading?: boolean;
   handleClose: () => void;
 }
 
-const ActionButtons = ({ submitButtonLabel, handleClose }: ActionButtonsProps) => {
+const ActionButtons = ({
+  submitButtonLabel,
+  submitButtonLoading,
+  handleClose
+}: ActionButtonsProps) => {
   return (
     <DialogActions sx={styles.actionsContainer}>
-      <Button onClick={handleClose} color="primary">
-        Fechar
-      </Button>
-      <Button color="primary" variant="contained" type="submit">
+      <Button color="primary" variant="solid" type="submit" loading={submitButtonLoading}>
         {submitButtonLabel}
+      </Button>
+      <Button onClick={handleClose} variant="plain" color="primary">
+        FECHAR
       </Button>
     </DialogActions>
   );

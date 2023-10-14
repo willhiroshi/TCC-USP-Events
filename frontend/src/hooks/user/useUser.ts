@@ -20,11 +20,6 @@ const useUser = () => {
       setAuthTokens(data);
       setUser(jwtDecode<User>(data.access));
       localStorage.setItem(AUTH_TOKENS_KEY, JSON.stringify(data));
-      alert('You have successfully logged in!');
-    },
-    onError: (error) => {
-      console.log(error);
-      alert('Something went wrong. Please try again.');
     }
   });
 
@@ -35,15 +30,7 @@ const useUser = () => {
         request.registerRequest.email,
         request.registerRequest.password,
         request.registerRequest.name
-      ),
-    onSuccess: async (data) => {
-      console.log(data);
-      alert("You've successfully registered! Please log in to continue.");
-    },
-    onError: (error) => {
-      console.log(error);
-      alert('Something went wrong. Please try again.');
-    }
+      )
   });
 
   return {

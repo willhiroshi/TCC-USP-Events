@@ -7,6 +7,8 @@ import CollapsableSidebar from '../CollapsableSidebar/CollapsableSidebar';
 import { Box, CssBaseline } from '@mui/material';
 import ProfilePage from '../ProfilePage/ProfilePage';
 import PrivateRoute from './components/PrivateRoute';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const RedirectToRoot = () => {
@@ -33,6 +35,19 @@ function App() {
           </Routes>
         </Box>
       </Box>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover={false}
+        theme="dark"
+      />
     </Box>
   );
 }

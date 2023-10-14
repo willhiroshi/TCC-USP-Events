@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Dialog } from '@mui/material';
 import Tabs from './components/Tabs/Tabs';
 import LoginContent from './components/LoginContent/LoginContent';
 import RegisterContent from './components/RegisterContent/RegisterContent';
 import ActionButtons from './components/ActionButtons/ActionButtons';
 import useUser from '../../hooks/user/useUser';
 import { LoginRequest, RegisterRequest } from '../../hooks/user/types';
+import { toast } from 'react-toastify';
+import Dialog from '@mui/material/Dialog';
 
 export enum LoginModalTabs {
   LOGIN = 'Login',
@@ -19,19 +20,10 @@ interface LoginModalProps {
 
 const LoginModal = ({ open, handleClose }: LoginModalProps) => {
   const [activeTab, setActiveTab] = useState<LoginModalTabs>(LoginModalTabs.LOGIN);
+
   const { postLogin, postRegister } = useUser();
-
-  const handleLogin = async (loginRequest: LoginRequest) => {
-    postLogin.mutateAsync({ loginRequest: loginRequest }).then(() => {
-      handleClose();
-    });
-  };
-
-  const handleRegister = async (registerRequest: RegisterRequest) => {
-    postRegister.mutateAsync({ registerRequest: registerRequest }).then(() => {
-      handleClose();
-    });
-  };
+  const { isLoading: loginIsLoading } = postLogin;
+  const { isLoading: registerIsLoading } = postRegister;
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: LoginModalTabs) => {
     setActiveTab(newValue);
@@ -64,6 +56,56 @@ const LoginModal = ({ open, handleClose }: LoginModalProps) => {
     }
   };
 
+  const handleLogin = async (loginRequest: LoginRequest) => {
+    await postLogin
+      .mutateAsync({ loginRequest: loginRequest })
+      .then(() => {
+        toast.success('Login realizado com sucesso!');
+        handleClose();
+      })
+      .catch((error) => {
+        console.log(error);
+
+        switch (error.response?.status) {
+          case 401:
+            toast.error('Usuário ou senha incorretos!');
+            break;
+          default:
+            toast.error('Erro ao realizar login!');
+            break;
+        }
+      });
+  };
+
+  const handleRegister = async (registerRequest: RegisterRequest) => {
+    const registerSuccessMessage = (
+      <p>
+        Registro realizado com sucesso!
+        <br />
+        Faça login para continuar
+      </p>
+    );
+
+    await postRegister
+      .mutateAsync({ registerRequest: registerRequest })
+      .then(() => {
+        toast.success(registerSuccessMessage, {
+          autoClose: 5000
+        });
+        handleClose();
+      })
+      .catch((error) => {
+        switch (error.response?.status) {
+          case 400:
+            toast.error('Usuário já cadastrado!');
+            break;
+          default:
+            toast.error('Erro ao realizar registro!');
+            break;
+        }
+      });
+  };
+
   return (
     <Dialog
       open={open}
@@ -80,12 +122,20 @@ const LoginModal = ({ open, handleClose }: LoginModalProps) => {
       {activeTab === LoginModalTabs.LOGIN ? (
         <form onSubmit={handleSubmit}>
           <LoginContent />
-          <ActionButtons submitButtonLabel="Entrar" handleClose={handleClose} />
+          <ActionButtons
+            submitButtonLabel="ENTRAR"
+            handleClose={handleClose}
+            submitButtonLoading={loginIsLoading}
+          />
         </form>
       ) : (
         <form onSubmit={handleSubmit}>
           <RegisterContent />
-          <ActionButtons submitButtonLabel="Registrar-se" handleClose={handleClose} />
+          <ActionButtons
+            submitButtonLabel="REGISTRAR-SE"
+            handleClose={handleClose}
+            submitButtonLoading={registerIsLoading}
+          />
         </form>
       )}
     </Dialog>
