@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { LoginRequest, RegisterRequest } from '../../hooks/user/types';
+import { toast } from 'react-toastify';
 import Tabs from './components/Tabs/Tabs';
 import LoginContent from './components/LoginContent/LoginContent';
 import RegisterContent from './components/RegisterContent/RegisterContent';
 import ActionButtons from './components/ActionButtons/ActionButtons';
 import useUser from '../../hooks/user/useUser';
-import { LoginRequest, RegisterRequest } from '../../hooks/user/types';
-import { toast } from 'react-toastify';
 import Dialog from '@mui/material/Dialog';
 
 export enum LoginModalTabs {

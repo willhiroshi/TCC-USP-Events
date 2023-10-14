@@ -1,6 +1,9 @@
 import * as styles from './styles';
 
-import { Card, CardActionArea, CardContent, CardHeader } from '@mui/material';
+import Card from '@mui/material/Card';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import moment from 'moment';

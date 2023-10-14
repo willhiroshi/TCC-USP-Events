@@ -1,15 +1,13 @@
 import React from 'react';
-import {
-  Checkbox,
-  FormControlLabel,
-  Button,
-  Popover,
-  DialogContent,
-  TextField,
-  InputAdornment,
-  IconButton,
-  Divider
-} from '@mui/material';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Button from '@mui/material/Button';
+import Popover from '@mui/material/Popover';
+import DialogContent from '@mui/material/DialogContent';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Divider from '@mui/material/Divider';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';

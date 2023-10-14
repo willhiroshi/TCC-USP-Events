@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './styles';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
 
 interface IconTextProps {
   IconComponent: React.ElementType;
