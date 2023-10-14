@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { DialogContent, IconButton, InputAdornment, TextField } from '@mui/material';
-import { Person } from '@mui/icons-material';
+import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import DialogContent from '@mui/material/DialogContent';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
 
 const LoginContent = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,7 +29,7 @@ const LoginContent = () => {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <Person />
+              <PersonIcon />
             </InputAdornment>
           )
         }}

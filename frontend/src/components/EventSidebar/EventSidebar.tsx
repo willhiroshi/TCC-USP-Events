@@ -1,6 +1,7 @@
 import * as styles from './styles';
 import React from 'react';
-import { Divider, Typography } from '@mui/material';
+import Divider from '@mui/material/Divider';
+import Typography from '@mui/material/Typography';
 import TypesFilter from './components/TypesFilter/TypesFilter';
 import DatesFilter from './components/DatesFilter/DatesFilter';
 import EventsInformation from './components/EventsInformation/EventsInformation';

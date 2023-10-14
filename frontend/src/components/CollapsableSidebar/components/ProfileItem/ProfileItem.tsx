@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import LoginIcon from '@mui/icons-material/Login';
-import { Box, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { AccountCircle } from '@mui/icons-material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import styles from './styles';
 import LoginModal from '../../../LoginModal/LoginModal';
 import useUserStore from '../../../../store/userStore';
@@ -15,6 +16,7 @@ interface ProfileItemProps {
 }
 
 const ProfileItem = ({ isSideBarOpen }: ProfileItemProps) => {
+  console.log('ProfileItem rendered'); // Add this line
   const user = useUserStore((state) => state.user);
 
   const [openLoginModal, setOpenLoginModal] = useState(false);

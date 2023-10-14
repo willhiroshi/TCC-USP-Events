@@ -1,14 +1,16 @@
 import styles from './styles';
 import React from 'react';
 
-import { FacebookEmbed, InstagramEmbed } from 'react-social-media-embed';
-import { Link, Typography } from '@mui/material';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
 import PlaceIcon from '@mui/icons-material/Place';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LinkIcon from '@mui/icons-material/Link';
 import IconText from '../../../IconText/IconText';
 import useHomeStore from '../../../../store/homeStore';
+import { InstagramEmbed } from 'react-social-media-embed/dist/components/embeds/InstagramEmbed';
+import { FacebookEmbed } from 'react-social-media-embed/dist/components/embeds/FacebookEmbed';
 
 const EventsInformation = () => {
   const selectedEvent = useHomeStore((state) => state.selectedEvent);
