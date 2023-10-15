@@ -2,12 +2,14 @@ import unittest
 
 import mock
 from classes.Post import RawPost
-from getProcessPosts import get_process_posts
+from getProcessPosts import _get_all_posts, get_process_posts
+from scrapers.FaceScraper import FaceScraper
+from scrapers.InstagramScraper import InstagramScraper
 
 
 class TestGetProcessPosts(unittest.TestCase):
     @mock.patch("getProcessPosts.get_links_on_database")
-    @mock.patch("getProcessPosts.get_instagram_posts")
+    @mock.patch("getProcessPosts._get_all_posts")
     @mock.patch("getProcessPosts.process_post")
     @mock.patch("getProcessPosts.get_lat_lon_by_address")
     @mock.patch("getProcessPosts.logger")
@@ -16,14 +18,16 @@ class TestGetProcessPosts(unittest.TestCase):
         mock_logger,
         mock_get_lat_lon_by_address,
         mock_process_post,
-        mock_get_instagram_posts,
+        mock_get_all_posts,
         mock_get_links_on_database,
     ):
         # mocks
         mock_get_links_on_database.return_value = []
 
-        mock_raw_post = RawPost(post_text="Text", post_link="http://mock.link", post_source='Mock Source')
-        mock_get_instagram_posts.return_value = [mock_raw_post]
+        mock_raw_post = RawPost(
+            post_text="Text", post_link="http://mock.link", post_source="Instagram"
+        )
+        mock_get_all_posts.return_value = [mock_raw_post]
 
         mock_processed_post = {
             "address": "Mock address",
@@ -48,16 +52,15 @@ class TestGetProcessPosts(unittest.TestCase):
                 "lat": "0",
                 "lng": "0",
                 "post_link": "http://mock.link",
-                "source": "Mock Source"
+                "source": "Instagram",
             }
         ]
 
         self.assertEqual(result, expected_result)
         mock_logger.error.assert_not_called()
 
-
     @mock.patch("getProcessPosts.get_links_on_database")
-    @mock.patch("getProcessPosts.get_instagram_posts")
+    @mock.patch("getProcessPosts._get_all_posts")
     @mock.patch("getProcessPosts.process_post")
     @mock.patch("getProcessPosts.get_lat_lon_by_address")
     @mock.patch("getProcessPosts.logger")
@@ -66,15 +69,17 @@ class TestGetProcessPosts(unittest.TestCase):
         mock_logger,
         mock_get_lat_lon_by_address,
         mock_process_post,
-        mock_get_instagram_posts,
+        mock_get_all_posts,
         mock_get_links_on_database,
     ):
         # mocks
         post_link = "http://mock.link"
         mock_get_links_on_database.return_value = [post_link]
 
-        mock_raw_post = RawPost(post_text="Text", post_link=post_link, post_source='Mock Source')
-        mock_get_instagram_posts.return_value = [mock_raw_post]
+        mock_raw_post = RawPost(
+            post_text="Text", post_link=post_link, post_source="Mock Source"
+        )
+        mock_get_all_posts.return_value = [mock_raw_post]
 
         # call function
         result = get_process_posts()
@@ -83,10 +88,37 @@ class TestGetProcessPosts(unittest.TestCase):
         expected_result = []
 
         self.assertEqual(result, expected_result)
-        mock_logger.info.assert_called_with(f"Post link already on database: {post_link[:50]}. Skipping process\n")
+        mock_logger.info.assert_called_with(
+            f"Post link already on database: {post_link[:50]}. Skipping process\n"
+        )
         mock_process_post.assert_not_called()
         mock_get_lat_lon_by_address.assert_not_called()
         mock_logger.error.assert_not_called()
+
+    @mock.patch.object(InstagramScraper, "get_posts")
+    @mock.patch.object(FaceScraper, "get_posts")
+    def test_get_all_posts(self, mock_get_facebook_posts, mock_get_instagram_posts):
+        # mocks
+        mock_instagram_post = RawPost(
+            post_text="Instagram Text",
+            post_link="http://instagram.mock.link",
+            post_source="Instagram",
+        )
+        mock_facebook_post = RawPost(
+            post_text="Facebook Text",
+            post_link="http://facebook.mock.link",
+            post_source="Facebook",
+        )
+
+        mock_get_instagram_posts.return_value = {mock_instagram_post}
+        mock_get_facebook_posts.return_value = {mock_facebook_post}
+
+        # call function
+        result = _get_all_posts()
+
+        # Asserts
+        expected_result = {mock_instagram_post, mock_facebook_post}
+        self.assertEqual(result, expected_result)
 
 
 if __name__ == "__main__":
