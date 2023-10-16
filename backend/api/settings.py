@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # Apps
     "apps.events",
     "apps.authentication",
+    "apps.webpage",
 ]
 
 REST_FRAMEWORK = {
