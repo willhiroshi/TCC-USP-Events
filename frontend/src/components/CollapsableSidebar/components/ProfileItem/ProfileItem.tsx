@@ -16,7 +16,6 @@ interface ProfileItemProps {
 }
 
 const ProfileItem = ({ isSideBarOpen }: ProfileItemProps) => {
-  console.log('ProfileItem rendered'); // Add this line
   const user = useUserStore((state) => state.user);
 
   const [openLoginModal, setOpenLoginModal] = useState(false);

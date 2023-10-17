@@ -20,47 +20,83 @@ import AddLinkIcon from '@mui/icons-material/AddLink';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import styles from './styles';
+import useWebpage from '../../../../hooks/webpage/useWebpage';
+import { Source, WebpageRequest } from '../../../../hooks/webpage/types';
+import { toast } from 'react-toastify';
 
 type MenuItem = {
   icon: JSX.Element;
-  value: string;
+  value: Source;
+  label: string;
 };
 
 const menuItems: MenuItem[] = [
   {
     icon: <FacebookOutlinedIcon />,
-    value: 'Facebook'
+    value: Source.FACEBOOK,
+    label: 'Facebook'
   },
   {
     icon: <InstagramIcon />,
-    value: 'Instagram'
+    value: Source.INSTAGRAM,
+    label: 'Instagram'
   }
 ];
 
-const isValidUrl = (url: string, source: string) => {
+const isValidUrl = (url: string, source: Source) => {
   let regex;
-  if (source === 'Facebook') {
-    regex = new RegExp('^(https?://)?((w{3}\\.)?)facebook.com/.+$');
-  } else if (source === 'Instagram') {
-    regex = new RegExp('^(https?://)?((w{3}\\.)?)instagram.com/.+$');
+
+  switch (source) {
+    case Source.FACEBOOK:
+      regex = new RegExp('^(https?://)?((w{3}\\.)?)facebook.com/.+$');
+      break;
+    case Source.INSTAGRAM:
+      regex = new RegExp('^(https?://)?((w{3}\\.)?)instagram.com/.+$');
+      break;
+    default:
+      break;
   }
 
   return regex?.test(url);
 };
 
 const PageRegistrationModal = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState<boolean>(true);
 
-  const [link, setLink] = useState('');
-  const [source, setSource] = useState(menuItems[0].value);
+  const [link, setLink] = useState<string>('');
+  const [source, setSource] = useState<Source>(menuItems[0].value);
 
   const isLinkValid = !link || !isValidUrl(link, source);
+
+  const { saveWebpage } = useWebpage();
+  const { mutateAsync: mutateAsyncSaveWebpage, isLoading: saveWebpageIsLoading } = saveWebpage;
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleSave = () => {};
+  const handleSave = async () => {
+    const webpageRequest: WebpageRequest = {
+      link,
+      source
+    };
+
+    await mutateAsyncSaveWebpage({ webpageRequest })
+      .then(() => {
+        toast.success('Página cadastrada com sucesso!');
+        handleClose();
+      })
+      .catch((error) => {
+        switch (error.response?.status) {
+          case 400:
+            toast.error('Página já cadastrada!');
+            break;
+          default:
+            toast.error('Erro ao cadastrar página!');
+            break;
+        }
+      });
+  };
 
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth="sm">
@@ -97,13 +133,13 @@ const PageRegistrationModal = () => {
             id="source-select"
             label="Origem"
             value={source}
-            onChange={(e) => setSource(e.target.value as string)}
+            onChange={(e) => setSource(e.target.value as Source)}
             renderValue={(selected) => {
               const menuItem = menuItems.find((item) => item.value === selected);
               return (
                 <Box sx={styles.menuItemContainer}>
                   {menuItem?.icon}
-                  {menuItem?.value}
+                  {menuItem?.label}
                 </Box>
               );
             }}
@@ -111,7 +147,7 @@ const PageRegistrationModal = () => {
             {menuItems.map((menuItem, idx) => (
               <MenuItem key={idx} value={menuItem.value} sx={styles.menuItemContainer}>
                 {menuItem.icon}
-                {menuItem.value}
+                {menuItem.label}
               </MenuItem>
             ))}
           </Select>
@@ -130,6 +166,7 @@ const PageRegistrationModal = () => {
               variant="contained"
               type="button"
               disabled={isLinkValid}
+              loading={saveWebpageIsLoading}
             >
               Salvar
             </LoadingButton>
