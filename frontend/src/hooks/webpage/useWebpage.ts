@@ -1,7 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { getAPIBaseUrl } from '../../utils/utils';
-import { Webpage, WebpageRequest } from './types';
+import { WebpageRequest } from './types';
 import useWebpageRequester from './useWebpageRequester';
+import { Webpage } from '../../types/webpage';
 
 const useWebpage = () => {
   const webpageRequester = useWebpageRequester(getAPIBaseUrl());

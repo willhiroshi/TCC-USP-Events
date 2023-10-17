@@ -21,8 +21,9 @@ import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import styles from './styles';
 import useWebpage from '../../../../hooks/webpage/useWebpage';
-import { Source, WebpageRequest } from '../../../../hooks/webpage/types';
+import { WebpageRequest } from '../../../../hooks/webpage/types';
 import { toast } from 'react-toastify';
+import { Source } from '../../../../types/webpage';
 
 type MenuItem = {
   icon: JSX.Element;

@@ -1,6 +1,6 @@
 import camelcaseKeys from 'camelcase-keys';
 import useAxios from '../axios/useAxios';
-import { Source, Webpage } from './types';
+import { Source, Webpage } from '../../types/webpage';
 
 const useWebpageRequester = (baseURL: string) => {
   const axiosInstance = useAxios(baseURL);
