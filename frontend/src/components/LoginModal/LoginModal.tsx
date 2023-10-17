@@ -64,8 +64,6 @@ const LoginModal = ({ open, handleClose }: LoginModalProps) => {
         handleClose();
       })
       .catch((error) => {
-        console.log(error);
-
         switch (error.response?.status) {
           case 401:
             toast.error('Usuário ou senha incorretos!');
