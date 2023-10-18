@@ -11,8 +11,7 @@ const styles: { [key: string]: CSSProperties } = {
     display: 'flex',
     flexDirection: 'column',
     margin: '20px',
-    padding: '20px',
-    paddingTop: 0,
+    padding: '0 20px',
     width: '100%'
   },
   header: {
