@@ -20,10 +20,14 @@ import AddLinkIcon from '@mui/icons-material/AddLink';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import styles from './styles';
-import useWebpage from '../../../../hooks/webpage/useWebpage';
-import { WebpageRequest } from '../../../../hooks/webpage/types';
-import { toast } from 'react-toastify';
 import { Source } from '../../../../types/webpage';
+
+interface PageRegistrationModalProps {
+  open: boolean;
+  saveWebpageIsLoading: boolean;
+  handleCloseRegistrationModal: () => void;
+  handleSave: (link: string, source: Source) => void;
+}
 
 type MenuItem = {
   icon: JSX.Element;
@@ -61,46 +65,23 @@ const isValidUrl = (url: string, source: Source) => {
   return regex?.test(url);
 };
 
-const PageRegistrationModal = () => {
-  const [open, setOpen] = useState<boolean>(true);
-
+const PageRegistrationModal = ({
+  open,
+  saveWebpageIsLoading,
+  handleCloseRegistrationModal,
+  handleSave
+}: PageRegistrationModalProps) => {
   const [link, setLink] = useState<string>('');
   const [source, setSource] = useState<Source>(menuItems[0].value);
-
   const isLinkValid = !link || !isValidUrl(link, source);
 
-  const { saveWebpage } = useWebpage();
-  const { mutateAsync: mutateAsyncSaveWebpage, isLoading: saveWebpageIsLoading } = saveWebpage;
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleSave = async () => {
-    const webpageRequest: WebpageRequest = {
-      link,
-      source
-    };
-
-    await mutateAsyncSaveWebpage({ webpageRequest })
-      .then(() => {
-        toast.success('Página cadastrada com sucesso!');
-        handleClose();
-      })
-      .catch((error) => {
-        switch (error.response?.status) {
-          case 400:
-            toast.error('Página já cadastrada!');
-            break;
-          default:
-            toast.error('Erro ao cadastrar página!');
-            break;
-        }
-      });
-  };
-
   return (
-    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" maxWidth="sm">
+    <Dialog
+      open={open}
+      onClose={handleCloseRegistrationModal}
+      aria-labelledby="form-dialog-title"
+      maxWidth="sm"
+    >
       <DialogTitle id="form-dialog-title">Cadastro de página</DialogTitle>
 
       <DialogContentText sx={styles.subtitle}>
@@ -156,13 +137,13 @@ const PageRegistrationModal = () => {
       </DialogContent>
 
       <DialogActions sx={styles.actionsContainer}>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={handleCloseRegistrationModal} color="primary">
           Cancelar
         </Button>
         <Tooltip title={isLinkValid ? 'Insira um link válido' : ''} placement="bottom" arrow>
           <Box>
             <LoadingButton
-              onClick={handleSave}
+              onClick={() => handleSave(link, source)}
               color="primary"
               variant="contained"
               type="button"
