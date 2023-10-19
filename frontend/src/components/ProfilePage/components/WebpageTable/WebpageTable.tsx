@@ -30,7 +30,7 @@ export interface Column {
 
 const columns: Column[] = [
   { id: 'webpage', label: 'Link da página', align: 'left' },
-  { id: 'source', label: 'Fonte', align: 'left' },
+  { id: 'source', label: 'Origem', align: 'left' },
   { id: 'actions', label: 'Ações', align: 'right' }
 ];
 
@@ -135,7 +135,11 @@ const WebpageTable = () => {
         <TableHead>
           <TableRow>
             {columns.map((column) => (
-              <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
+              <TableCell
+                key={column.id}
+                align={column.align}
+                style={{ minWidth: column.minWidth, fontWeight: 'bold' }}
+              >
                 {column.label}
               </TableCell>
             ))}

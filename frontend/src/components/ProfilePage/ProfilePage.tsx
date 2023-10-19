@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Divider from '@mui/material/Divider';
 import styles from './styles';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
+import Paper from '@mui/material/Paper';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import PageRegistrationModal from './components/PageRegistrationModal/PageRegistrationModal';
-import useWebpage from '../../hooks/webpage/useWebpage';
+
 import { WebpageRequest } from '../../hooks/webpage/types';
 import { Source } from '../../types/webpage';
 import { toast } from 'react-toastify';
-
+import PageRegistrationModal from './components/PageRegistrationModal/PageRegistrationModal';
+import useWebpage from '../../hooks/webpage/useWebpage';
 import WebpageTable from './components/WebpageTable/WebpageTable';
 
 const ProfilePage = () => {
@@ -52,6 +55,14 @@ const ProfilePage = () => {
       });
   };
 
+  const getTooltipText = () => {
+    return (
+      <Typography sx={styles.infoText}>
+        Insira as páginas de sua preferência de onde os eventos serão buscados
+      </Typography>
+    );
+  };
+
   return (
     <Box sx={styles.outsideContainer}>
       <Paper sx={styles.profileContainer}>
@@ -61,7 +72,14 @@ const ProfilePage = () => {
         <Divider />
 
         <Box sx={styles.subheader}>
-          <Typography variant="h6">Preferências de usuário</Typography>
+          <Box sx={styles.infoHeader}>
+            <Typography variant="h6">Preferências de usuário</Typography>
+            <Tooltip title={getTooltipText()} arrow placement="top">
+              <IconButton>
+                <InfoIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </Box>
           <Button variant="contained" onClick={handleOpenRegistrationPageModal} sx={styles.button}>
             Nova página
           </Button>

@@ -24,6 +24,14 @@ const styles: { [key: string]: CSSProperties } = {
     alignItems: 'begin',
     padding: '15px 0'
   },
+  infoHeader: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  infoText: {
+    textAlign: 'center',
+    justifyContent: 'end'
+  },
   button: {
     maxHeight: '30px'
   }
