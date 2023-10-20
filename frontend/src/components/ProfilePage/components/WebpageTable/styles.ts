@@ -15,6 +15,18 @@ const styles = {
     display: 'flex',
     alignSelf: 'flex-end',
     borderBottom: '0px'
+  },
+  linkCellContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: '10px'
+  },
+  sourceCellContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: '10px'
   }
 };
 
