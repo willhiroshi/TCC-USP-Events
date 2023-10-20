@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
@@ -8,15 +8,10 @@ import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
-import { useTheme } from '@mui/material/styles';
 
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import FirstPageIcon from '@mui/icons-material/FirstPage';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import LastPageIcon from '@mui/icons-material/LastPage';
 import useWebpage from '../../../../hooks/webpage/useWebpage';
 import Loading from '../../../Loading/Loading';
 import ReloadButton from '../../../ReloadButton/ReloadButton';
@@ -25,87 +20,37 @@ import { toast } from 'react-toastify';
 import WebpageInputModal from '../PageRegistrationModal/WebpageInputModal';
 import { Source, Webpage } from '../../../../types/webpage';
 import { WebpageRequest } from '../../../../hooks/webpage/types';
+import LinkIcon from '@mui/icons-material/Link';
+import Link from '@mui/material/Link';
+import TablePaginationActions from '@mui/material/TablePagination/TablePaginationActions';
+import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
+import InstagramIcon from '@mui/icons-material/Instagram';
 
 export interface Column {
   id: string;
   label: string;
-  minWidth?: number;
+  width?: string;
+  minWidth?: string;
+  maxWidth?: string;
   align?: 'right' | 'left' | 'center';
 }
 
 const columns: Column[] = [
-  { id: 'webpage', label: 'Link da página', align: 'left' },
+  { id: 'webpage', label: 'Link da página', align: 'left', width: '60%' },
   { id: 'source', label: 'Origem', align: 'left' },
   { id: 'actions', label: 'Ações', align: 'center' }
 ];
 
 const editModalTitle = 'Edição de página';
-const editModalText = 'Atualize as informações referentes à página abaixo:';
+const editModalText = 'Atualize as informações referentes à página abaixo';
 
 export interface WebpageTableProps {
   handleDelete: (webpageId: string) => void;
 }
 
-interface TablePaginationActionsProps {
-  count: number;
-  page: number;
-  rowsPerPage: number;
-  onPageChange: (event: React.MouseEvent<HTMLButtonElement>, newPage: number) => void;
-}
-
-const TablePaginationActions = (props: TablePaginationActionsProps) => {
-  const theme = useTheme();
-  const { count, page, rowsPerPage, onPageChange } = props;
-
-  const handleFirstPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    onPageChange(event, 0);
-  };
-
-  const handleBackButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    onPageChange(event, page - 1);
-  };
-
-  const handleNextButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    onPageChange(event, page + 1);
-  };
-
-  const handleLastPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-  };
-
-  return (
-    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label="first page"
-      >
-        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
-      </IconButton>
-      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
-        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-      </IconButton>
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
-      >
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-      </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
-      >
-        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
-      </IconButton>
-    </Box>
-  );
-};
-
 const WebpageTable = ({ handleDelete }: WebpageTableProps) => {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [webpageToEdit, setWebpageToEdit] = useState<Webpage>();
 
@@ -119,6 +64,23 @@ const WebpageTable = ({ handleDelete }: WebpageTableProps) => {
     refetch: webpagesRefetch
   } = getWebpages();
 
+  const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const displayedWebpages = useMemo(() => {
+    return rowsPerPage > 0
+      ? webpages?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+      : webpages;
+  }, [webpages, page, rowsPerPage]);
+
   if (webpagesIsLoading || webpagesIsError) {
     if (webpagesIsError) {
       toast.error('Erro ao carregar páginas!');
@@ -130,19 +92,6 @@ const WebpageTable = ({ handleDelete }: WebpageTableProps) => {
       </Box>
     );
   }
-
-  const rows = webpages || [];
-
-  const handleChangePage = (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
 
   const handleOpenEditWebpageModal = (webpage: Webpage) => {
     setWebpageToEdit(webpage);
@@ -202,44 +151,52 @@ const WebpageTable = ({ handleDelete }: WebpageTableProps) => {
           </TableHead>
 
           <TableBody>
-            {(rowsPerPage > 0
-              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              : rows
-            )?.map((row, index) => (
-              <TableRow hover role="checkbox" key={index}>
-                <TableCell>
-                  <a href={row.link}>{row.link}</a>
-                </TableCell>
-                <TableCell align="left">
-                  {row.source.charAt(0).toUpperCase() + row.source.slice(1)}
-                </TableCell>
-                <TableCell sx={styles.actionButtons} align="center">
-                  <IconButton
-                    sx={{ color: 'blue' }}
-                    onClick={() => handleOpenEditWebpageModal(row)}
-                  >
-                    <EditIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton sx={{ color: 'red' }} onClick={() => handleDeleteWebpage(row.id)}>
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            {displayedWebpages?.map((row, index) => {
+              const linkLabel = row.link.replace('https://', '');
+              const sourceLabel = row.source.charAt(0).toUpperCase() + row.source.slice(1);
+              return (
+                <TableRow hover role="checkbox" key={index}>
+                  <TableCell sx={styles.linkCellContainer}>
+                    <LinkIcon color="action" sx={{ rotate: '-45deg' }} />
+                    <Link href={row.link} underline="hover" target="_blank">
+                      {linkLabel}
+                    </Link>
+                  </TableCell>
+                  <TableCell align="left">
+                    <Box sx={styles.sourceCellContainer}>
+                      {row.source === Source.FACEBOOK && <FacebookOutlinedIcon />}
+                      {row.source === Source.INSTAGRAM && <InstagramIcon />}
+                      {sourceLabel}
+                    </Box>
+                  </TableCell>
+                  <TableCell sx={styles.actionButtons} align="center">
+                    <IconButton
+                      sx={{ color: 'blue' }}
+                      onClick={() => handleOpenEditWebpageModal(row)}
+                    >
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton sx={{ color: 'red' }} onClick={() => handleDeleteWebpage(row.id)}>
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
 
         <TableFooter sx={styles.tableFooterContainer}>
           <TableRow>
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+              rowsPerPageOptions={[20, 30, 40, 50, { label: 'Tudo', value: -1 }]}
               colSpan={3}
-              count={rows.length}
+              count={webpages.length}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{
                 inputProps: {
-                  'aria-label': 'rows per page'
+                  'aria-label': 'Linhas por página'
                 },
                 native: true
               }}
