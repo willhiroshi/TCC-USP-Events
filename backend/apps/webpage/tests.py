@@ -124,3 +124,50 @@ class WebPageDetailViewTestCase(TestCase):
         self.webpage.refresh_from_db()
         self.assertEqual(self.webpage.link, data["link"])
         self.assertEqual(self.webpage.source, data["source"])
+
+
+class AllWebPagesViewTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.admin_user = User.objects.create_superuser(
+            email="admin@example.com",
+            username="adminuser",
+            password="12345",
+            name="Admin User",
+        )
+        self.client.force_authenticate(user=self.admin_user)
+        self.normal_user1 = User.objects.create_user(
+            email="user1@example.com",
+            username="user1",
+            password="12345",
+            name="User 1",
+        )
+        self.normal_user2 = User.objects.create_user(
+            email="user2@example.com",
+            username="user2",
+            password="12345",
+            name="User 2",
+        )
+        self.webpage1 = WebPage.objects.create(
+            link="http://example1.com", source="facebook"
+        )
+        self.webpage2 = WebPage.objects.create(
+            link="http://example2.com", source="facebook"
+        )
+        self.webpage1.users.add(self.normal_user1)
+        self.webpage2.users.add(self.normal_user2)
+
+    def test_normal_user_cannot_access_all_webpages(self):
+        self.client.force_authenticate(user=self.normal_user1)
+        response = self.client.get(reverse("all_webpages"))
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_all_webpages(self):
+        response = self.client.get(reverse("all_webpages"))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        expected_data1 = WebPageSerializer(self.webpage1).data
+        expected_data2 = WebPageSerializer(self.webpage2).data
+        returned_data = response.data["data"]
+        self.assertIn(expected_data1, returned_data)
+        self.assertIn(expected_data2, returned_data)

@@ -1,10 +1,19 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
 from .models import WebPage
 from .serializers import WebPageSerializer, WebPageWithoutUsers
+
+
+@api_view(["GET"])
+@permission_classes([IsAdminUser])
+def all_webpages(request):
+    if request.method == "GET":
+        webpages = WebPage.objects.all()
+        serializer = WebPageSerializer(webpages, many=True)
+        return Response({"data": serializer.data})
 
 
 @api_view(["GET", "POST"])
