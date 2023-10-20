@@ -21,6 +21,12 @@ const styles = {
     flexDirection: 'row',
     alignItems: 'center',
     gap: '10px'
+  },
+  sourceCellContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: '10px'
   }
 };
 

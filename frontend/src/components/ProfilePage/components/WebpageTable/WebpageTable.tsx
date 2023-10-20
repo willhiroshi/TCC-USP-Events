@@ -24,21 +24,22 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 export interface Column {
   id: string;
   label: string;
-  minWidth?: number;
+  width?: string;
+  minWidth?: string;
+  maxWidth?: string;
   align?: 'right' | 'left' | 'center';
 }
 
 const columns: Column[] = [
-  { id: 'webpage', label: 'Link da página', align: 'left' },
+  { id: 'webpage', label: 'Link da página', align: 'left', width: '60%' },
   { id: 'source', label: 'Origem', align: 'left' },
   { id: 'actions', label: 'Ações', align: 'right' }
 ];
 
 const WebpageTable = () => {
+  const { getWebpages } = useWebpage();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
-
-  const { getWebpages } = useWebpage();
 
   const {
     data: webpages,
@@ -58,6 +59,12 @@ const WebpageTable = () => {
     setPage(0);
   };
 
+  const displayedWebpages = useMemo(() => {
+    return rowsPerPage > 0
+      ? webpages?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+      : webpages;
+  }, [webpages, page, rowsPerPage]);
+
   if (webpagesIsLoading || webpagesIsError) {
     if (webpagesIsError) {
       toast.error('Erro ao carregar páginas!');
@@ -70,12 +77,6 @@ const WebpageTable = () => {
     );
   }
 
-  const displayedWebpages = useMemo(() => {
-    return rowsPerPage > 0
-      ? webpages.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-      : webpages;
-  }, [webpages, page, rowsPerPage]);
-
   return (
     <TableContainer sx={styles.tableContainer}>
       <Table stickyHeader aria-label="sticky table">
@@ -85,7 +86,12 @@ const WebpageTable = () => {
               <TableCell
                 key={column.id}
                 align={column.align}
-                style={{ minWidth: column.minWidth, fontWeight: 'bold' }}
+                style={{
+                  width: column.width,
+                  minWidth: column.minWidth,
+                  maxWidth: column.maxWidth,
+                  fontWeight: 'bold'
+                }}
               >
                 {column.label}
               </TableCell>
@@ -107,7 +113,7 @@ const WebpageTable = () => {
                   </Link>
                 </TableCell>
                 <TableCell align="left">
-                  <Box sx={styles.linkCellContainer}>
+                  <Box sx={styles.sourceCellContainer}>
                     {row.source === Source.FACEBOOK && <FacebookOutlinedIcon />}
                     {row.source === Source.INSTAGRAM && <InstagramIcon />}
                     {sourceLabel}
@@ -123,14 +129,14 @@ const WebpageTable = () => {
       <TableFooter sx={styles.tableFooterContainer}>
         <TableRow>
           <TablePagination
-            rowsPerPageOptions={[20, 30, 40, 50, { label: 'All', value: -1 }]}
+            rowsPerPageOptions={[20, 30, 40, 50, { label: 'Tudo', value: -1 }]}
             colSpan={3}
             count={webpages.length}
             rowsPerPage={rowsPerPage}
             page={page}
             SelectProps={{
               inputProps: {
-                'aria-label': 'rows per page'
+                'aria-label': 'Linhas por página'
               },
               native: true
             }}
