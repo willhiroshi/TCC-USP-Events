@@ -4,6 +4,7 @@ export enum Source {
 }
 
 export interface Webpage {
+  id: string;
   link: string;
   source: Source;
 }

@@ -17,9 +17,24 @@ const useWebpage = () => {
       webpageRequester.saveWebpage(request.webpageRequest.link, request.webpageRequest.source)
   });
 
+  const deleteWebpage = useMutation<Webpage, unknown, { webpageId: string }>({
+    mutationFn: (request) => webpageRequester.deleteWebpage(request.webpageId)
+  });
+
+  const editWebpage = useMutation<Webpage, unknown, { webpageRequest: WebpageRequest }>({
+    mutationFn: (request) =>
+      webpageRequester.editWebpage(
+        request.webpageRequest.id as string,
+        request.webpageRequest.link,
+        request.webpageRequest.source
+      )
+  });
+
   return {
     getWebpages,
-    saveWebpage
+    saveWebpage,
+    deleteWebpage,
+    editWebpage
   };
 };
 

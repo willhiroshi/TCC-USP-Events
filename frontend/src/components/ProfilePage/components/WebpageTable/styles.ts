@@ -15,6 +15,11 @@ const styles = {
     display: 'flex',
     alignSelf: 'flex-end',
     borderBottom: '0px'
+  },
+  actionButtons: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '5px'
   }
 };
 
