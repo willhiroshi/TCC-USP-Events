@@ -12,5 +12,5 @@ class Scraper(ABC):
         pass
 
     @abstractmethod
-    def get_posts(self, page: str, num_posts: int) -> set:
+    def get_posts(self, pages: list[str], num_posts: int) -> set:
         pass

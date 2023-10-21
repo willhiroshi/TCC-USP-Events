@@ -2,8 +2,8 @@ import re
 import time
 
 from classes.Logger import Logger
-from classes.Post import RawPost
 from classes.Scraper import Scraper
+from classes.types.Post import RawPost
 from classes.WebDriverInstance import WebDriverInstance
 from decouple import config
 from selenium.webdriver.common.by import By
@@ -39,10 +39,9 @@ class InstagramScraper(Scraper):
         )
         login_button.click()
 
-    def get_posts(self, instagram_page: str, num_posts: int = 5) -> set[RawPost]:
+    def get_posts(self, instagram_pages: list[str], num_posts: int = 5) -> set[RawPost]:
         # Instantiate web driver when needed
         self.web_driver = WebDriverInstance().get_instance()
-        logger.info(f"Scraping Instagram page: {instagram_page}\n")
 
         # login if necessary
         try:
@@ -51,76 +50,87 @@ class InstagramScraper(Scraper):
         except:
             logger.info("Login not necessary. Skipping login.\n")
 
-        # open specific page
-        self.web_driver.get(instagram_page)
-        time.sleep(5)
+        # get posts from pages
+        all_posts_content = set()
 
-        # get limited number of posts
-        posts_content = set()
-        previous_posts = list()
-        reach_maximum_posts = False
-        while not reach_maximum_posts:
-            # find all posts visible on current page
-            all_posts = self.web_driver.find_element(
-                By.CSS_SELECTOR,
-                "article.x1iyjqo2",
-            )
-            all_posts_list = all_posts.find_elements(
-                By.CSS_SELECTOR,
-                "a.x1i10hfl.xjbqb8w.x6umtig.x1b1mbwd.xaqea5y.xav7gou.x9f619.x1ypdohk.xt0psk2.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.xexx8yu.x4uap5.x18d9i69.xkhd6sd.x16tdsg8.x1hl2dhg.xggy1nq.x1a2a7pz._a6hd",
-            )
+        for instagram_page in instagram_pages:
+            logger.info(f"Scraping Instagram page: {instagram_page}\n")
 
-            # check if there are no more posts to be loaded
-            if previous_posts == all_posts_list:
-                break
-            previous_posts = all_posts_list
+            # open specific page
+            self.web_driver.get(instagram_page)
+            time.sleep(5)
 
-            # click on posts and extract information
-            for post in all_posts_list:
-                try:
-                    post.click()
-                    time.sleep(3)
+            # get limited number of posts
+            posts_content = set()
+            previous_posts = list()
+            reach_maximum_posts = False
+            while not reach_maximum_posts:
+                # find all posts visible on current page
+                all_posts = self.web_driver.find_element(
+                    By.CSS_SELECTOR,
+                    "article.x1iyjqo2",
+                )
+                all_posts_list = all_posts.find_elements(
+                    By.CSS_SELECTOR,
+                    "a.x1i10hfl.xjbqb8w.x6umtig.x1b1mbwd.xaqea5y.xav7gou.x9f619.x1ypdohk.xt0psk2.xe8uvvx.xdj266r.x11i5rnm.xat24cr.x1mh8g0r.xexx8yu.x4uap5.x18d9i69.xkhd6sd.x16tdsg8.x1hl2dhg.xggy1nq.x1a2a7pz._a6hd",
+                )
 
-                    # get post content information
-                    post_link = post.get_attribute("href")
-                    logger.info(f"[Post {len(posts_content)}] Post link: {post_link}\n")
+                # check if there are no more posts to be loaded
+                if previous_posts == all_posts_list:
+                    break
+                previous_posts = all_posts_list
 
-                    # get post text
-                    post_text = self.web_driver.find_element(
-                        By.CSS_SELECTOR,
-                        "h1._aacl._aaco._aacu._aacx._aad7._aade",
-                    ).text
-                    logger.info(
-                        f"[Post {len(posts_content)}] Post text: {post_text[:30]}...\n"
-                    )
+                # click on posts and extract information
+                for post in all_posts_list:
+                    try:
+                        post.click()
+                        time.sleep(3)
 
-                    posts_content.add(
-                        RawPost(
-                            post_text=self._pre_process_post_text(post_text),
-                            post_link=post_link,
-                            post_source="Instagram",
+                        # get post content information
+                        post_link = post.get_attribute("href")
+                        logger.info(
+                            f"[Post {len(posts_content)}] Post link: {post_link}\n"
                         )
-                    )
-                    if len(posts_content) >= num_posts:
-                        reach_maximum_posts = True
-                        break
 
-                    logger.info(f"[Post {len(posts_content)}] Post got successfully.\n")
-                    self.web_driver.back()
+                        # get post text
+                        post_text = self.web_driver.find_element(
+                            By.CSS_SELECTOR,
+                            "h1._aacl._aaco._aacu._aacx._aad7._aade",
+                        ).text
+                        logger.info(
+                            f"[Post {len(posts_content)}] Post text: {post_text[:30]}...\n"
+                        )
 
-                except Exception as error:
-                    logger.error(
-                        f"Error clicking on post and gathering its information. ERROR=[{error}]\n"
-                    )
+                        posts_content.add(
+                            RawPost(
+                                post_text=self._pre_process_post_text(post_text),
+                                post_link=post_link,
+                                post_source="Instagram",
+                            )
+                        )
+                        if len(posts_content) >= num_posts:
+                            reach_maximum_posts = True
+                            break
 
-            # scroll down on page
-            self.web_driver.execute_script(
-                "window.scrollTo(0, document.body.scrollHeight);"
-            )
-            time.sleep(3)
+                        logger.info(
+                            f"[Post {len(posts_content)}] Post got successfully.\n"
+                        )
+                        self.web_driver.back()
+
+                    except Exception as error:
+                        logger.error(
+                            f"Error clicking on post and gathering its information. ERROR=[{error}]\n"
+                        )
+
+                # scroll down on page
+                self.web_driver.execute_script(
+                    "window.scrollTo(0, document.body.scrollHeight);"
+                )
+                time.sleep(3)
+
+            logger.info(f"Posts obtained from Instagram page: {instagram_page}\n")
+
+            all_posts_content.update(posts_content)
 
         self.web_driver.quit()
-
-        logger.info(f"Posts obtained from Instagram page: {instagram_page}\n")
-
-        return posts_content
+        return all_posts_content

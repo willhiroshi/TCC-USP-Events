@@ -2,6 +2,8 @@ import json
 
 import requests
 from classes.Logger import Logger
+from classes.types.Event import Event
+from classes.types.WebPage import WebPage
 from decouple import config
 
 
@@ -37,23 +39,22 @@ class APIRequester:
         else:
             raise Exception("Failed to get access token")
 
-    def get_links_on_database(self) -> list[str]:
+    def get_all_events(self) -> list[Event]:
         request_response = requests.get(
             f"{self.API_BASE_URL}/events", auth=self.bearer_auth
         )
 
         if request_response.status_code >= 300:
-            self.logger.error(f"Failed to get post links from database")
+            self.logger.error(f"Failed to get events from database")
             self.logger.error(f"Response: {request_response.content}\n")
             return []
 
-        self.logger.info(f"Post links obtained successfully from database\n")
+        self.logger.info(f"Events obtained successfully from database\n")
         database_content = request_response.content
-        posts_on_database = json.loads(database_content)["data"]
-        post_links_on_database = [post["post_link"] for post in posts_on_database]
-        return post_links_on_database
+        events_on_database = json.loads(database_content)["data"]
+        return [Event.from_dict(event) for event in events_on_database]
 
-    def get_all_webpages_links(self) -> list[str]:
+    def get_all_webpages(self) -> list[WebPage]:
         request_response = requests.get(
             f"{self.API_BASE_URL}/webpage/all-webpages", auth=self.bearer_auth
         )
@@ -66,8 +67,5 @@ class APIRequester:
         self.logger.info(f"Webpages obtained successfully from database\n")
         database_content = request_response.content
         webpages_on_database = json.loads(database_content)["data"]
-        print(json.loads(database_content)["data"])
 
-        webpage_links = [webpage["link"] for webpage in webpages_on_database]
-
-        return webpage_links
+        return [WebPage.from_dict(webpage) for webpage in webpages_on_database]

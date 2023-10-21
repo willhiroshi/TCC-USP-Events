@@ -1,7 +1,7 @@
 import unittest
 
 import mock
-from classes.Post import RawPost
+from classes.types.Post import RawPost
 from getProcessPosts import _get_all_posts, get_process_posts
 from scrapers.FaceScraper import FaceScraper
 from scrapers.InstagramScraper import InstagramScraper
