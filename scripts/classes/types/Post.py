@@ -27,7 +27,15 @@ class Post:
 
     def __hash__(self):
         return hash(
-            (self.date, self.address, self.price, self.lat, self.lng, self.post_link, self.source)
+            (
+                self.date,
+                self.address,
+                self.price,
+                self.lat,
+                self.lng,
+                self.post_link,
+                self.source,
+            )
         )
 
     def to_dict(self):
@@ -50,7 +58,7 @@ class Post:
             lat=post_dict["lat"],
             lng=post_dict["lng"],
             post_link=post_dict["post_link"],
-            source=post_dict["source"]
+            source=post_dict["source"],
         )
 
 
@@ -67,7 +75,11 @@ class RawPost:
         return f"RawPost(post_text={self.post_text}, post_link={self.post_link}), post_source={self.post_source}"
 
     def __eq__(self, other):
-        return self.post_text == other.post_text and self.post_link == other.post_link and self.post_source == other.post_source
+        return (
+            self.post_text == other.post_text
+            and self.post_link == other.post_link
+            and self.post_source == other.post_source
+        )
 
     def __hash__(self):
         return hash((self.post_text, self.post_link, self.post_source))
@@ -76,7 +88,7 @@ class RawPost:
         return {
             "post_text": self.post_text,
             "post_link": self.post_link,
-            "post_source": self.post_source
+            "post_source": self.post_source,
         }
 
     @staticmethod
@@ -84,5 +96,5 @@ class RawPost:
         return RawPost(
             post_text=raw_post_dict["post_text"],
             post_link=raw_post_dict["post_link"],
-            post_source=raw_post_dict["post_source"]
+            post_source=raw_post_dict["post_source"],
         )
