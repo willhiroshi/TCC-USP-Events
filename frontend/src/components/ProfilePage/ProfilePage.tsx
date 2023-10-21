@@ -12,16 +12,22 @@ import Typography from '@mui/material/Typography';
 import { WebpageRequest } from '../../hooks/webpage/types';
 import { Source } from '../../types/webpage';
 import { toast } from 'react-toastify';
-import PageRegistrationModal from './components/PageRegistrationModal/PageRegistrationModal';
+import WebpageInputModal from './components/PageRegistrationModal/WebpageInputModal';
 import useWebpage from '../../hooks/webpage/useWebpage';
 import WebpageTable from './components/WebpageTable/WebpageTable';
 
+const dialogTitle = 'Cadastro de página';
+const dialogText =
+  'Registre suas páginas favoritas para receber atualizações sobre eventos futuros \
+  que são anunciados nelas, proporcionando uma experiência personalizada para você.';
+
 const ProfilePage = () => {
-  const { getWebpages, saveWebpage } = useWebpage();
+  const { getWebpages, saveWebpage, deleteWebpage } = useWebpage();
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState<boolean>(false);
 
   const { refetch: refetchWebpages } = getWebpages();
   const { mutateAsync: mutateAsyncSaveWebpage, isLoading: saveWebpageIsLoading } = saveWebpage;
+  const { mutateAsync: mutateAsyncDeleteWebpage } = deleteWebpage;
 
   const handleOpenRegistrationPageModal = () => {
     setIsRegistrationModalOpen(true);
@@ -50,6 +56,24 @@ const ProfilePage = () => {
             break;
           default:
             toast.error('Erro ao cadastrar página!');
+            break;
+        }
+      });
+  };
+
+  const handleDeleteWebpage = async (webpageId: string) => {
+    await mutateAsyncDeleteWebpage({ webpageId })
+      .then(() => {
+        toast.success('Página removida com sucesso!');
+        refetchWebpages();
+      })
+      .catch((error) => {
+        switch (error.response?.status) {
+          case 404:
+            toast.error('Erro ao buscar página!');
+            break;
+          default:
+            toast.error('Erro ao remover página!');
             break;
         }
       });
@@ -86,15 +110,20 @@ const ProfilePage = () => {
         </Box>
         <Divider />
 
-        <WebpageTable />
+        <WebpageTable handleDelete={handleDeleteWebpage} />
       </Paper>
 
-      <PageRegistrationModal
-        open={isRegistrationModalOpen}
-        saveWebpageIsLoading={saveWebpageIsLoading}
-        handleCloseRegistrationModal={handleCloseRegistrationPageModal}
-        handleSave={handleSaveRegistrationPage}
-      />
+      {isRegistrationModalOpen && (
+        <WebpageInputModal
+          open={isRegistrationModalOpen}
+          dialogTitle={dialogTitle}
+          dialogText={dialogText}
+          webpageToEdit={undefined}
+          handleCloseRegistrationModal={handleCloseRegistrationPageModal}
+          saveWebpageIsLoading={saveWebpageIsLoading}
+          handleSave={handleSaveRegistrationPage}
+        />
+      )}
     </Box>
   );
 };

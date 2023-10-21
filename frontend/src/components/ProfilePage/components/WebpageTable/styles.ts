@@ -16,6 +16,12 @@ const styles = {
     alignSelf: 'flex-end',
     borderBottom: '0px'
   },
+  actionButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: '5px'
+  },
   linkCellContainer: {
     display: 'flex',
     flexDirection: 'row',

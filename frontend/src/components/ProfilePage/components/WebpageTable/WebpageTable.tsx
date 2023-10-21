@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
@@ -9,14 +9,19 @@ import TableBody from '@mui/material/TableBody';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
 
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import useWebpage from '../../../../hooks/webpage/useWebpage';
 import Loading from '../../../Loading/Loading';
 import ReloadButton from '../../../ReloadButton/ReloadButton';
 import styles from './styles';
 import { toast } from 'react-toastify';
+import WebpageInputModal from '../PageRegistrationModal/WebpageInputModal';
+import { Source, Webpage } from '../../../../types/webpage';
+import { WebpageRequest } from '../../../../hooks/webpage/types';
 import LinkIcon from '@mui/icons-material/Link';
 import Link from '@mui/material/Link';
-import { Source } from '../../../../types/webpage';
 import TablePaginationActions from '@mui/material/TablePagination/TablePaginationActions';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -33,13 +38,24 @@ export interface Column {
 const columns: Column[] = [
   { id: 'webpage', label: 'Link da página', align: 'left', width: '60%' },
   { id: 'source', label: 'Origem', align: 'left' },
-  { id: 'actions', label: 'Ações', align: 'right' }
+  { id: 'actions', label: 'Ações', align: 'center' }
 ];
 
-const WebpageTable = () => {
-  const { getWebpages } = useWebpage();
+const editModalTitle = 'Edição de página';
+const editModalText = 'Atualize as informações referentes à página abaixo';
+
+export interface WebpageTableProps {
+  handleDelete: (webpageId: string) => void;
+}
+
+const WebpageTable = ({ handleDelete }: WebpageTableProps) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [webpageToEdit, setWebpageToEdit] = useState<Webpage>();
+
+  const { getWebpages, editWebpage } = useWebpage();
+  const { mutateAsync: mutateAsyncEditWebpage, isLoading: editWebpageIsLoading } = editWebpage;
 
   const {
     data: webpages,
@@ -77,6 +93,45 @@ const WebpageTable = () => {
     );
   }
 
+  const handleOpenEditWebpageModal = (webpage: Webpage) => {
+    setWebpageToEdit(webpage);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEditWebpageModal = () => {
+    setIsEditModalOpen(false);
+  };
+
+  const handleDeleteWebpage = (webpageId: string) => {
+    handleDelete(webpageId);
+  };
+
+  const handleEditWebpage = async (link: string, source: Source) => {
+    const webpageId = webpageToEdit?.id;
+    const webpageRequest: WebpageRequest = {
+      id: webpageId,
+      link,
+      source
+    };
+
+    await mutateAsyncEditWebpage({ webpageRequest })
+      .then(() => {
+        toast.success('Página editada com sucesso');
+        setIsEditModalOpen(false);
+        webpagesRefetch();
+      })
+      .catch((error) => {
+        switch (error.response?.status) {
+          case 400:
+            toast.error('Página já cadastrada!');
+            break;
+          default:
+            toast.error('Erro ao editar página');
+            break;
+        }
+      });
+  };
+
   return (
     <TableContainer sx={styles.tableContainer}>
       <Table stickyHeader aria-label="sticky table">
@@ -86,12 +141,7 @@ const WebpageTable = () => {
               <TableCell
                 key={column.id}
                 align={column.align}
-                style={{
-                  width: column.width,
-                  minWidth: column.minWidth,
-                  maxWidth: column.maxWidth,
-                  fontWeight: 'bold'
-                }}
+                style={{ minWidth: column.minWidth, fontWeight: 'bold', fontSize: '16px' }}
               >
                 {column.label}
               </TableCell>
@@ -103,7 +153,6 @@ const WebpageTable = () => {
           {displayedWebpages?.map((row, index) => {
             const linkLabel = row.link.replace('https://', '');
             const sourceLabel = row.source.charAt(0).toUpperCase() + row.source.slice(1);
-
             return (
               <TableRow hover role="checkbox" key={index}>
                 <TableCell sx={styles.linkCellContainer}>
@@ -119,7 +168,22 @@ const WebpageTable = () => {
                     {sourceLabel}
                   </Box>
                 </TableCell>
-                <TableCell></TableCell>
+                <TableCell align="center">
+                  <Box sx={styles.actionButtons}>
+                    <IconButton
+                      sx={{ color: 'blue', padding: '0 8px' }}
+                      onClick={() => handleOpenEditWebpageModal(row)}
+                    >
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                    <IconButton
+                      sx={{ color: 'red', padding: '0 8px' }}
+                      onClick={() => handleDeleteWebpage(row.id)}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                </TableCell>
               </TableRow>
             );
           })}
@@ -146,6 +210,18 @@ const WebpageTable = () => {
           />
         </TableRow>
       </TableFooter>
+
+      {isEditModalOpen && (
+        <WebpageInputModal
+          open={isEditModalOpen}
+          dialogTitle={editModalTitle}
+          dialogText={editModalText}
+          webpageToEdit={webpageToEdit}
+          handleCloseRegistrationModal={handleCloseEditWebpageModal}
+          saveWebpageIsLoading={editWebpageIsLoading}
+          handleSave={handleEditWebpage}
+        />
+      )}
     </TableContainer>
   );
 };

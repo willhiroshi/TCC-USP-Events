@@ -35,7 +35,37 @@ const useWebpageRequester = (baseURL: string) => {
     return camelcaseKeys(response.data.data, { deep: true });
   };
 
-  return { getWebpages, saveWebpage };
+  const deleteWebpage = async (webpageId: string): Promise<Webpage> => {
+    const deleteEndpoint = `${endpoint}/${webpageId}`;
+    const requestParams = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    const response = await axiosInstance(deleteEndpoint, requestParams);
+    return response.data.data;
+  };
+
+  const editWebpage = async (id: string, link: string, source: Source): Promise<Webpage> => {
+    const editEndpoint = `${endpoint}/${id}`;
+    const requestParams = {
+      method: 'PUT',
+      header: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        link,
+        source
+      }
+    };
+
+    const response = await axiosInstance(editEndpoint, requestParams);
+    return response.data.data;
+  };
+
+  return { getWebpages, saveWebpage, deleteWebpage, editWebpage };
 };
 
 export default useWebpageRequester;

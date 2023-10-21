@@ -16,14 +16,17 @@ import {
   Tooltip
 } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import AddLinkIcon from '@mui/icons-material/AddLink';
+import LinkIcon from '@mui/icons-material/Link';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import styles from './styles';
-import { Source } from '../../../../types/webpage';
+import { Source, Webpage } from '../../../../types/webpage';
 
 interface PageRegistrationModalProps {
   open: boolean;
+  dialogTitle: string;
+  dialogText: string;
+  webpageToEdit?: Webpage;
   saveWebpageIsLoading: boolean;
   handleCloseRegistrationModal: () => void;
   handleSave: (link: string, source: Source) => void;
@@ -53,10 +56,10 @@ const isValidUrl = (url: string, source: Source) => {
 
   switch (source) {
     case Source.FACEBOOK:
-      regex = new RegExp('^(https?://)?((w{3}\\.)?)facebook.com/.+$');
+      regex = new RegExp('^(https?://)?facebook.com/.+$');
       break;
     case Source.INSTAGRAM:
-      regex = new RegExp('^(https?://)?((w{3}\\.)?)instagram.com/.+$');
+      regex = new RegExp('^(https?://)?instagram.com/.+$');
       break;
     default:
       break;
@@ -65,14 +68,19 @@ const isValidUrl = (url: string, source: Source) => {
   return regex?.test(url);
 };
 
-const PageRegistrationModal = ({
+const WebpageInputModal = ({
   open,
+  dialogTitle,
+  dialogText,
+  webpageToEdit,
   saveWebpageIsLoading,
   handleCloseRegistrationModal,
   handleSave
 }: PageRegistrationModalProps) => {
-  const [link, setLink] = useState<string>('');
-  const [source, setSource] = useState<Source>(menuItems[0].value);
+  const [link, setLink] = useState<string>(webpageToEdit ? webpageToEdit.link : '');
+  const [source, setSource] = useState<Source>(
+    webpageToEdit ? webpageToEdit.source : menuItems[0].value
+  );
   const isLinkValid = !link || !isValidUrl(link, source);
 
   return (
@@ -82,12 +90,9 @@ const PageRegistrationModal = ({
       aria-labelledby="form-dialog-title"
       maxWidth="sm"
     >
-      <DialogTitle id="form-dialog-title">Cadastro de página</DialogTitle>
+      <DialogTitle id="form-dialog-title">{dialogTitle}</DialogTitle>
 
-      <DialogContentText sx={styles.subtitle}>
-        Registre suas páginas favoritas para receber atualizações sobre eventos futuros que são
-        anunciados nelas, proporcionando uma experiência personalizada para você.
-      </DialogContentText>
+      <DialogContentText sx={styles.subtitle}>{dialogText}</DialogContentText>
 
       <DialogContent sx={styles.contentContainer}>
         <TextField
@@ -96,6 +101,7 @@ const PageRegistrationModal = ({
           id="name"
           label="Link"
           type="text"
+          value={link}
           fullWidth
           placeholder="https://facebook.com/prgusp"
           autoComplete="off"
@@ -103,7 +109,7 @@ const PageRegistrationModal = ({
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <AddLinkIcon />
+                <LinkIcon sx={{ rotate: '-45deg' }} />
               </InputAdornment>
             )
           }}
@@ -159,4 +165,4 @@ const PageRegistrationModal = ({
   );
 };
 
-export default PageRegistrationModal;
+export default WebpageInputModal;
