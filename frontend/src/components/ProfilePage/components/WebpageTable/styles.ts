@@ -18,6 +18,7 @@ const styles = {
   },
   actionButtons: {
     display: 'flex',
+    flexDirection: 'row',
     justifyContent: 'center',
     gap: '5px'
   },

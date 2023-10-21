@@ -113,14 +113,17 @@ const ProfilePage = () => {
         <WebpageTable handleDelete={handleDeleteWebpage} />
       </Paper>
 
-      <WebpageInputModal
-        open={isRegistrationModalOpen}
-        dialogTitle={dialogTitle}
-        dialogText={dialogText}
-        saveWebpageIsLoading={saveWebpageIsLoading}
-        handleCloseRegistrationModal={handleCloseRegistrationPageModal}
-        handleSave={handleSaveRegistrationPage}
-      />
+      {isRegistrationModalOpen && (
+        <WebpageInputModal
+          open={isRegistrationModalOpen}
+          dialogTitle={dialogTitle}
+          dialogText={dialogText}
+          webpageToEdit={undefined}
+          handleCloseRegistrationModal={handleCloseRegistrationPageModal}
+          saveWebpageIsLoading={saveWebpageIsLoading}
+          handleSave={handleSaveRegistrationPage}
+        />
+      )}
     </Box>
   );
 };

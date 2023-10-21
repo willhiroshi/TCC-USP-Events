@@ -133,80 +133,83 @@ const WebpageTable = ({ handleDelete }: WebpageTableProps) => {
   };
 
   return (
-    <Box sx={{ height: '100%' }}>
-      <TableContainer sx={styles.tableContainer}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth, fontWeight: 'bold', fontSize: '16px' }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
+    <TableContainer sx={styles.tableContainer}>
+      <Table stickyHeader aria-label="sticky table">
+        <TableHead>
+          <TableRow>
+            {columns.map((column) => (
+              <TableCell
+                key={column.id}
+                align={column.align}
+                style={{ minWidth: column.minWidth, fontWeight: 'bold', fontSize: '16px' }}
+              >
+                {column.label}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
 
-          <TableBody>
-            {displayedWebpages?.map((row, index) => {
-              const linkLabel = row.link.replace('https://', '');
-              const sourceLabel = row.source.charAt(0).toUpperCase() + row.source.slice(1);
-              return (
-                <TableRow hover role="checkbox" key={index}>
-                  <TableCell sx={styles.linkCellContainer}>
-                    <LinkIcon color="action" sx={{ rotate: '-45deg' }} />
-                    <Link href={row.link} underline="hover" target="_blank">
-                      {linkLabel}
-                    </Link>
-                  </TableCell>
-                  <TableCell align="left">
-                    <Box sx={styles.sourceCellContainer}>
-                      {row.source === Source.FACEBOOK && <FacebookOutlinedIcon />}
-                      {row.source === Source.INSTAGRAM && <InstagramIcon />}
-                      {sourceLabel}
-                    </Box>
-                  </TableCell>
-                  <TableCell sx={styles.actionButtons} align="center">
+        <TableBody>
+          {displayedWebpages?.map((row, index) => {
+            const linkLabel = row.link.replace('https://', '');
+            const sourceLabel = row.source.charAt(0).toUpperCase() + row.source.slice(1);
+            return (
+              <TableRow hover role="checkbox" key={index}>
+                <TableCell sx={styles.linkCellContainer}>
+                  <LinkIcon color="action" sx={{ rotate: '-45deg' }} />
+                  <Link href={row.link} underline="hover" target="_blank">
+                    {linkLabel}
+                  </Link>
+                </TableCell>
+                <TableCell align="left">
+                  <Box sx={styles.sourceCellContainer}>
+                    {row.source === Source.FACEBOOK && <FacebookOutlinedIcon />}
+                    {row.source === Source.INSTAGRAM && <InstagramIcon />}
+                    {sourceLabel}
+                  </Box>
+                </TableCell>
+                <TableCell align="center">
+                  <Box sx={styles.actionButtons}>
                     <IconButton
-                      sx={{ color: 'blue' }}
+                      sx={{ color: 'blue', padding: '0 8px' }}
                       onClick={() => handleOpenEditWebpageModal(row)}
                     >
                       <EditIcon fontSize="small" />
                     </IconButton>
-                    <IconButton sx={{ color: 'red' }} onClick={() => handleDeleteWebpage(row.id)}>
+                    <IconButton
+                      sx={{ color: 'red', padding: '0 8px' }}
+                      onClick={() => handleDeleteWebpage(row.id)}
+                    >
                       <DeleteIcon fontSize="small" />
                     </IconButton>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+                  </Box>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
 
-        <TableFooter sx={styles.tableFooterContainer}>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[20, 30, 40, 50, { label: 'Tudo', value: -1 }]}
-              colSpan={3}
-              count={webpages.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  'aria-label': 'Linhas por página'
-                },
-                native: true
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </TableContainer>
+      <TableFooter sx={styles.tableFooterContainer}>
+        <TableRow>
+          <TablePagination
+            rowsPerPageOptions={[20, 30, 40, 50, { label: 'Tudo', value: -1 }]}
+            colSpan={3}
+            count={webpages.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            SelectProps={{
+              inputProps: {
+                'aria-label': 'Linhas por página'
+              },
+              native: true
+            }}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            ActionsComponent={TablePaginationActions}
+          />
+        </TableRow>
+      </TableFooter>
 
       {isEditModalOpen && (
         <WebpageInputModal
@@ -219,7 +222,7 @@ const WebpageTable = ({ handleDelete }: WebpageTableProps) => {
           handleSave={handleEditWebpage}
         />
       )}
-    </Box>
+    </TableContainer>
   );
 };
 
