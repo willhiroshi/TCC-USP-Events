@@ -9,11 +9,36 @@ from .serializers import WebPageSerializer, WebPageWithoutUsers
 
 @api_view(["GET"])
 @permission_classes([IsAdminUser])
-def all_webpages(request):
+def all(request):
     if request.method == "GET":
         webpages = WebPage.objects.all()
         serializer = WebPageSerializer(webpages, many=True)
         return Response({"data": serializer.data})
+
+@api_view(["POST"])
+@permission_classes([IsAdminUser])
+def default(request):
+    if request.method == "POST":
+
+        existent_webpage = WebPage.objects.get(link=request.data["link"])
+
+        if existent_webpage:
+            existent_webpage.is_default = True
+            existent_webpage.save()
+
+            return_value = existent_webpage
+        else:
+            webpage = WebPage.objects.create(
+                link=request.data["link"],
+                source=request.data["source"],
+                is_default=True
+            )
+            webpage.save()
+
+            return_value = webpage
+
+        serializer = WebPageWithoutUsers(return_value)
+        return Response({"data": serializer.data}, status=status.HTTP_201_CREATED)
 
 
 @api_view(["GET", "POST"])

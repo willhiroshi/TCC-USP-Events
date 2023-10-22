@@ -11,7 +11,7 @@ class WebPageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WebPage
-        fields = ["id", "link", "source", "users"]
+        fields = ["id", "link", "source", "users", "is_default"]
 
     def validate(self, data):
         link = data.get("link")
