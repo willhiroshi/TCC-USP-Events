@@ -20,24 +20,16 @@ def all(request):
 def default(request):
     if request.method == "POST":
 
-        existent_webpage = WebPage.objects.get(link=request.data["link"])
+        webpage, created = WebPage.objects.get_or_create(
+            link=request.data["link"],
+            source=request.data["source"]
+        )
 
-        if existent_webpage:
-            existent_webpage.is_default = True
-            existent_webpage.save()
+        webpage.is_default = True
 
-            return_value = existent_webpage
-        else:
-            webpage = WebPage.objects.create(
-                link=request.data["link"],
-                source=request.data["source"],
-                is_default=True
-            )
-            webpage.save()
+        webpage.save()
 
-            return_value = webpage
-
-        serializer = WebPageWithoutUsers(return_value)
+        serializer = WebPageWithoutUsers(webpage)
         return Response({"data": serializer.data}, status=status.HTTP_201_CREATED)
 
 
