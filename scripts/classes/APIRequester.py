@@ -56,7 +56,7 @@ class APIRequester:
 
     def get_all_webpages(self) -> list[WebPage]:
         request_response = requests.get(
-            f"{self.API_BASE_URL}/webpage/all-webpages", auth=self.bearer_auth
+            f"{self.API_BASE_URL}/webpage/all", auth=self.bearer_auth
         )
 
         if request_response.status_code >= 300:

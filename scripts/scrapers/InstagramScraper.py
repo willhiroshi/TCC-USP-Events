@@ -39,7 +39,7 @@ class InstagramScraper(Scraper):
         )
         login_button.click()
 
-    def get_posts(self, instagram_pages: list[str], num_posts: int = 5) -> set[RawPost]:
+    def get_posts(self, instagram_pages: set[str], num_posts: int = 5) -> set[RawPost]:
         # Instantiate web driver when needed
         self.web_driver = WebDriverInstance().get_instance()
 
