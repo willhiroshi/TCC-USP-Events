@@ -22,9 +22,7 @@ class APIRequester:
     DB_SU_PASSWORD = config("DB_SU_PASSWORD", default="admin", cast=str)
 
     def __init__(self):
-        self.token = self._get_access_token()
         self.logger = Logger(__name__)
-        self.bearer_auth = BearerAuth(self.token)
 
     def _get_access_token(self):
         response = requests.post(
@@ -40,8 +38,11 @@ class APIRequester:
             raise Exception("Failed to get access token")
 
     def get_all_events(self) -> list[Event]:
+        token = self._get_access_token()
+        bearer_auth = BearerAuth(token)
+
         request_response = requests.get(
-            f"{self.API_BASE_URL}/events", auth=self.bearer_auth
+            f"{self.API_BASE_URL}/events", auth=bearer_auth
         )
 
         if request_response.status_code >= 300:
@@ -55,8 +56,11 @@ class APIRequester:
         return [Event.from_dict(event) for event in events_on_database]
 
     def get_all_webpages(self) -> list[WebPage]:
+        token = self._get_access_token()
+        bearer_auth = BearerAuth(token)
+
         request_response = requests.get(
-            f"{self.API_BASE_URL}/webpage/all", auth=self.bearer_auth
+            f"{self.API_BASE_URL}/webpage/all", auth=bearer_auth
         )
 
         if request_response.status_code >= 300:
