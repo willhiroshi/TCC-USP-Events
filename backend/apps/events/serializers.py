@@ -16,4 +16,5 @@ class EventSerializer(serializers.ModelSerializer):
             "lng",
             "type",
             "source",
+            "webpage",
         ]
