@@ -1,4 +1,5 @@
 from unittest.mock import Mock
+import uuid
 
 from apps.authentication.models import User
 from django.test import TestCase
@@ -111,7 +112,7 @@ class WebPageDetailViewTestCase(TestCase):
 
     def test_delete_inexistent_user_webpage(self):
         response = self.client.delete(
-            reverse("webpage_detail", kwargs={"user_webpage_id": 100})
+            reverse("webpage_detail", kwargs={"user_webpage_id": uuid.uuid4()})
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -159,11 +160,11 @@ class AllWebPagesViewTestCase(TestCase):
 
     def test_normal_user_cannot_access_all_webpages(self):
         self.client.force_authenticate(user=self.normal_user1)
-        response = self.client.get(reverse("all_webpages"))
+        response = self.client.get(reverse("all"))
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_all_webpages(self):
-        response = self.client.get(reverse("all_webpages"))
+        response = self.client.get(reverse("all"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         expected_data1 = WebPageSerializer(self.webpage1).data
