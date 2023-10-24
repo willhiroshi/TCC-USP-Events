@@ -1,10 +1,11 @@
 import hashlib
 
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
-from .models import Event
+from .models import Event, WebPage
 from .serializers import EventSerializer
 
 
@@ -16,8 +17,10 @@ def event(request):
     LOCATIONLESS_PARAM = "locationless"
 
     if request.method == "GET":
+        webpages = WebPage.objects.filter(users=request.user) | WebPage.objects.filter(is_default=True)
+
         queryParams = request.query_params
-        events = Event.objects.all()
+        events = Event.objects.filter(webpage__in=webpages)
 
         if START_DATE_PARAM in queryParams and END_DATE_PARAM in queryParams:
             start = queryParams[START_DATE_PARAM]
@@ -72,6 +75,7 @@ def event(request):
 
 
 @api_view(["GET", "PUT", "DELETE"])
+@permission_classes([IsAdminUser])
 def event_detail(request, hash_id):
     try:
         event = Event.objects.get(pk=hash_id)

@@ -1,5 +1,7 @@
 from django.db import models
 
+from apps.webpage.models import WebPage
+
 
 class Event(models.Model):
     EVENT_TYPES = [
@@ -17,3 +19,4 @@ class Event(models.Model):
     lng = models.CharField(max_length=25, null=True)
     type = models.CharField(max_length=40, choices=EVENT_TYPES, default="unclassified")
     source = models.CharField(max_length=20, null=True)
+    webpage = models.ForeignKey(WebPage, on_delete=models.CASCADE, related_name='events')
