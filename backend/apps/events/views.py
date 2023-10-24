@@ -17,9 +17,13 @@ def event(request):
     LOCATIONLESS_PARAM = "locationless"
 
     if request.method == "GET":
-        webpages = WebPage.objects.filter(users=request.user) | WebPage.objects.filter(is_default=True)
-
         queryParams = request.query_params
+
+        webpages = WebPage.objects.filter(is_default=True)
+
+        if request.user.is_authenticated:
+            webpages = webpages | WebPage.objects.filter(users=request.user)
+
         events = Event.objects.filter(webpage__in=webpages)
 
         if START_DATE_PARAM in queryParams and END_DATE_PARAM in queryParams:
@@ -54,7 +58,14 @@ def event(request):
 
         return Response({"data": serializer.data})
 
+    # POST method to create a new event for admin users
     elif request.method == "POST":
+        if request.user.is_superuser is False:
+            return Response(
+                {"error": "You do not have permission to create events."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         # create a hash id for the post
         hash_object = hashlib.sha256()
         post_link: str = request.data["post_link"]
