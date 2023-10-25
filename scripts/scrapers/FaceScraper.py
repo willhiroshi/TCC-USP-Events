@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from classes.Logger import Logger
 from classes.Scraper import Scraper
 from classes.types.Post import RawPost
+from classes.types.WebPage import WebPage
 from classes.WebDriverInstance import WebDriverInstance
 from decouple import config
 from selenium.webdriver.common.by import By
@@ -38,26 +39,28 @@ class FaceScraper(Scraper):
         login_button = self.web_driver.find_element(By.NAME, "login")
         login_button.click()
 
-    def get_posts(self, facebook_pages: set[str], num_posts: int = 5) -> set[RawPost]:
+    def get_posts(
+        self, facebook_webpages: set[WebPage], num_posts: int = 5
+    ) -> set[RawPost]:
         # Instantiate web driver when needed
         self.web_driver = WebDriverInstance().get_instance()
 
         # login if necessary
         try:
             self._login(FACEBOOK_EMAIL, FACEBOOK_PASSWORD)
-            time.sleep(5)
+            time.sleep(3)
         except:
             logger.info("Login not necessary. Skipping login.\n")
 
         # get posts from pages
         all_posts_content = set()
 
-        for facebook_page in facebook_pages:
-            logger.info(f"Scraping Facebook page: {facebook_page}\n")
+        for facebook_webpage in facebook_webpages:
+            logger.info(f"Scraping Facebook page: {facebook_webpage.link}\n")
 
             # open specific page
-            self.web_driver.get(facebook_page)
-            time.sleep(5)
+            self.web_driver.get(facebook_webpage.link)
+            time.sleep(3)
 
             # get limited number of posts
             posts_content = set()
@@ -112,6 +115,7 @@ class FaceScraper(Scraper):
                                 post_text=post_text.text,
                                 post_link=post_link,
                                 post_source="Facebook",
+                                webpage=facebook_webpage,
                             )
                         )
                         if len(posts_content) >= num_posts:
@@ -130,7 +134,7 @@ class FaceScraper(Scraper):
 
             all_posts_content.update(posts_content)
 
-            logger.info(f"Posts obtained from Facebook page: {facebook_page}\n")
+            logger.info(f"Posts obtained from Facebook page: {facebook_webpage.link}\n")
 
         self.web_driver.quit()
         return all_posts_content

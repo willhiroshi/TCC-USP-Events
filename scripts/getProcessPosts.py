@@ -16,19 +16,19 @@ api_requester = APIRequester()
 def _get_all_posts() -> set[RawPost]:
     all_webpages = api_requester.get_all_webpages()
 
-    facebook_page_links = set()
-    instagram_page_links = set()
+    facebook_webpages = set()
+    instagram_webpages = set()
 
     for webpage in all_webpages:
         if webpage.source == "facebook":
-            facebook_page_links.add(webpage.link)
+            facebook_webpages.add(webpage)
         elif webpage.source == "instagram":
-            instagram_page_links.add(webpage.link)
+            instagram_webpages.add(webpage)
 
     posts = set()
 
-    instagram_posts = instagram_scraper.get_posts(instagram_pages=instagram_page_links)
-    facebook_posts = facebook_scraper.get_posts(facebook_pages=facebook_page_links)
+    instagram_posts = instagram_scraper.get_posts(instagram_webpages=facebook_webpages)
+    facebook_posts = facebook_scraper.get_posts(facebook_webpages=instagram_webpages)
 
     posts.update(instagram_posts)
     posts.update(facebook_posts)
@@ -56,14 +56,14 @@ def get_process_posts() -> list[Post]:
             lat, lng = get_lat_lon_by_address(processed_post["address"])
             coords = {"lat": lat, "lng": lng}
             source = {"source": raw_post.post_source}
+            webpage = {"webpage": raw_post.webpage.id}
 
             processed_post.update(coords)
             processed_post.update(post_link)
             processed_post.update(source)
+            processed_post.update(webpage)
             processed_posts.append(processed_post)
-            logger.info(
-                f"Post processed: {raw_post.post_text[:50]}, post_link: {raw_post.post_link[:50]}\n"
-            )
+            logger.info(f"Processed post: {processed_post}")
 
         except Exception as error:
             logger.error(f"Error on processing post {raw_post}. Error=[{error}]\n")
