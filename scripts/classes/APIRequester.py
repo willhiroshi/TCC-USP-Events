@@ -85,5 +85,5 @@ class APIRequester:
             logger.error(f"Response: {request_response.content}\n")
             return None
 
-        logger.info(f"Event saved successfully on database\n")
+        logger.info(f"Event saved successfully on database. Event={event_json}\n")
         return None

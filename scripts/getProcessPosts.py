@@ -27,8 +27,8 @@ def _get_all_posts() -> set[RawPost]:
 
     posts = set()
 
-    instagram_posts = instagram_scraper.get_posts(instagram_webpages=facebook_webpages)
-    facebook_posts = facebook_scraper.get_posts(facebook_webpages=instagram_webpages)
+    instagram_posts = instagram_scraper.get_posts(instagram_webpages=instagram_webpages)
+    facebook_posts = facebook_scraper.get_posts(facebook_webpages=facebook_webpages)
 
     posts.update(instagram_posts)
     posts.update(facebook_posts)
@@ -63,7 +63,7 @@ def get_process_posts() -> list[Post]:
             processed_post.update(source)
             processed_post.update(webpage)
             processed_posts.append(processed_post)
-            logger.info(f"Processed post: {processed_post}")
+            logger.info(f"Processed post: {processed_post}\n")
 
         except Exception as error:
             logger.error(f"Error on processing post {raw_post}. Error=[{error}]\n")
