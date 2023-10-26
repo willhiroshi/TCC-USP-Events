@@ -62,6 +62,16 @@ class FaceScraper(Scraper):
             self.web_driver.get(facebook_webpage.link)
             time.sleep(3)
 
+            # check if it is a page
+            page_source = self.web_driver.page_source
+            soup = BeautifulSoup(page_source, "html.parser")
+            isPage = soup.find(
+                "span", {"class": "x193iq5w xeuugli x13faqbe x1vvkbs x10flsy6 x6prxxf xvq8zen xo1l8bm xzsf02u"}
+            )
+            if not isPage:
+                logger.error(f"Fail to load. Link: {facebook_page} is not a page")
+                continue
+
             # get limited number of posts
             posts_content = set()
             reach_maximum_posts = False
