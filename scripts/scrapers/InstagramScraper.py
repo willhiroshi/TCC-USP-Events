@@ -4,6 +4,7 @@ import time
 from classes.Logger import Logger
 from classes.Scraper import Scraper
 from classes.types.Post import RawPost
+from classes.types.WebPage import WebPage
 from classes.WebDriverInstance import WebDriverInstance
 from decouple import config
 from selenium.webdriver.common.by import By
@@ -39,7 +40,9 @@ class InstagramScraper(Scraper):
         )
         login_button.click()
 
-    def get_posts(self, instagram_pages: set[str], num_posts: int = 5) -> set[RawPost]:
+    def get_posts(
+        self, instagram_webpages: set[WebPage], num_posts: int = 5
+    ) -> set[RawPost]:
         # Instantiate web driver when needed
         self.web_driver = WebDriverInstance().get_instance()
 
@@ -53,11 +56,11 @@ class InstagramScraper(Scraper):
         # get posts from pages
         all_posts_content = set()
 
-        for instagram_page in instagram_pages:
-            logger.info(f"Scraping Instagram page: {instagram_page}\n")
+        for instagram_webpage in instagram_webpages:
+            logger.info(f"Scraping Instagram page: {instagram_webpage.link}\n")
 
             # open specific page
-            self.web_driver.get(instagram_page)
+            self.web_driver.get(instagram_webpage.link)
             time.sleep(5)
 
             # get limited number of posts
@@ -101,20 +104,21 @@ class InstagramScraper(Scraper):
                             f"[Post {len(posts_content)}] Post text: {post_text[:30]}...\n"
                         )
 
+                        logger.info(
+                            f"[Post {len(posts_content)}] Post got successfully.\n"
+                        )
                         posts_content.add(
                             RawPost(
                                 post_text=self._pre_process_post_text(post_text),
                                 post_link=post_link,
                                 post_source="Instagram",
+                                webpage=instagram_webpage,
                             )
                         )
                         if len(posts_content) >= num_posts:
                             reach_maximum_posts = True
                             break
 
-                        logger.info(
-                            f"[Post {len(posts_content)}] Post got successfully.\n"
-                        )
                         self.web_driver.back()
 
                     except Exception as error:
@@ -128,7 +132,7 @@ class InstagramScraper(Scraper):
                 )
                 time.sleep(3)
 
-            logger.info(f"Posts obtained from Instagram page: {instagram_page}\n")
+            logger.info(f"Posts obtained from Instagram page: {instagram_webpage.link}\n")
 
             all_posts_content.update(posts_content)
 

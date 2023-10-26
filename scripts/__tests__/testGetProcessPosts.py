@@ -27,8 +27,18 @@ class TestGetProcessPosts(unittest.TestCase):
         # mocks
         mock_get_all_events.return_value = []
 
+        mock_webpage = WebPage(
+            id=1,
+            link="http://mock.link",
+            source="Instagram",
+            users=[],
+        )
+
         mock_raw_post = RawPost(
-            post_text="Text", post_link="http://mock.link", post_source="Instagram"
+            post_text="Text",
+            post_link="http://mock.link",
+            post_source="Instagram",
+            webpage=mock_webpage,
         )
         mock_get_all_posts.return_value = [mock_raw_post]
 
@@ -56,6 +66,7 @@ class TestGetProcessPosts(unittest.TestCase):
                 "lng": "0",
                 "post_link": "http://mock.link",
                 "source": "Instagram",
+                "webpage": 1,
             }
         ]
 
@@ -77,6 +88,12 @@ class TestGetProcessPosts(unittest.TestCase):
     ):
         # mocks
         post_link = "http://mock.link"
+        mock_webpage = WebPage(
+            id=1,
+            link="http://mock.link",
+            source="Instagram",
+            users=[],
+        )
         mock_event = [
             Event(
                 hash_id=1,
@@ -93,7 +110,10 @@ class TestGetProcessPosts(unittest.TestCase):
         mock_get_all_events.return_value = mock_event
 
         mock_raw_post = RawPost(
-            post_text="Text", post_link=post_link, post_source="Mock Source"
+            post_text="Text",
+            post_link=post_link,
+            post_source="Mock Source",
+            webpage=mock_webpage,
         )
         mock_get_all_posts.return_value = [mock_raw_post]
 
@@ -128,11 +148,13 @@ class TestGetProcessPosts(unittest.TestCase):
             post_text="Instagram Text",
             post_link="http://instagram.mock.link",
             post_source="Instagram",
+            webpage=mock_webpage,
         )
         mock_facebook_post = RawPost(
             post_text="Facebook Text",
             post_link="http://facebook.mock.link",
             post_source="Facebook",
+            webpage=mock_webpage.id,
         )
 
         mock_get_all_webpages.return_value = [mock_webpage]
