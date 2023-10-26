@@ -69,7 +69,7 @@ class FaceScraper(Scraper):
                 "span", {"class": "x193iq5w xeuugli x13faqbe x1vvkbs x10flsy6 x6prxxf xvq8zen xo1l8bm xzsf02u"}
             )
             if not isPage:
-                logger.error(f"Fail to load. Link: {facebook_page} is not a page")
+                logger.error(f"Fail to load. Link: {facebook_webpage.link} is not a page")
                 continue
 
             # get limited number of posts
