@@ -20,15 +20,12 @@ const styles = {
     width: '100%',
     minHeight: 70,
     justifyContent: 'initial',
+    pl: 2.5,
     gap: '10px',
-    padding: '0 16px 0 20px',
 
     ':hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.10)'
     }
-  },
-  LogoutText: {
-    fontWeight: 'bold'
   }
 };
 

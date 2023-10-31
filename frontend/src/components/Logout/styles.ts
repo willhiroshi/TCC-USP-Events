@@ -7,8 +7,8 @@ const styles = {
     width: '100%',
     height: '30px',
     justifyContent: 'center',
+    pl: 2.5,
     gap: '5px',
-    padding: '0 16px 0 20px',
 
     ':hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.10)'
