@@ -12,7 +12,7 @@ class Event(models.Model):
 
     hash_id = models.TextField(primary_key=True, default="dftValue")
     post_link = models.TextField(null=False)
-    date = models.CharField(max_length=50, null=True)
+    date = models.CharField(max_length=50, null=False)
     address = models.CharField(max_length=300, null=True)
     price = models.CharField(max_length=50, null=True)
     lat = models.CharField(max_length=25, null=True)
