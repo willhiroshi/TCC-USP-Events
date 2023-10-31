@@ -6,10 +6,12 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import LoginIcon from '@mui/icons-material/Login';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import styles from './styles';
 import LoginModal from '../../../LoginModal/LoginModal';
 import useUserStore from '../../../../store/userStore';
+import Logout from '../../../Logout/Logout';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Divider from '@mui/material/Divider';
 
 interface ProfileItemProps {
   isSideBarOpen: boolean;
@@ -50,6 +52,8 @@ const ProfileItem = ({ isSideBarOpen }: ProfileItemProps) => {
               </Box>
             ))}
         </ListItemButton>
+        <Divider />
+        <Logout user={user} isSideBarOpen={isSideBarOpen} />
       </ListItem>
       <LoginModal open={openLoginModal} handleClose={handleClose} />
     </>

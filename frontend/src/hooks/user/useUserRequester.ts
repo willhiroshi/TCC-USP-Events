@@ -21,6 +21,21 @@ const useUserRequester = (baseURL: string) => {
     return camelcaseKeys(response.data, { deep: true });
   };
 
+  const postLogout = async (refreshToken: string) => {
+    const endpoint = `/auth/token/invalidate`;
+    const requestParams = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        refresh: refreshToken
+      }
+    };
+
+    return await axiosInstance(endpoint, requestParams);
+  };
+
   const postRegister = async (username: string, email: string, password: string, name: string) => {
     const endpoint = `/auth/register`;
     const requestParams = {
@@ -40,7 +55,7 @@ const useUserRequester = (baseURL: string) => {
     return camelcaseKeys(response.data.data, { deep: true });
   };
 
-  return { postLogin, postRegister };
+  return { postLogin, postLogout, postRegister };
 };
 
 export default useUserRequester;
