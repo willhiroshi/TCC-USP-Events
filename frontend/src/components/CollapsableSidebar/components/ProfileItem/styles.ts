@@ -17,6 +17,7 @@ const styles = {
     justifyContent: 'center'
   },
   listItemButton: {
+    width: '100%',
     minHeight: 70,
     justifyContent: 'initial',
     pl: 2.5,

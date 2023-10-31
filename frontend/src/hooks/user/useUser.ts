@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { getAPIBaseUrl } from '../../utils/utils';
 import { Authentication } from '../../types/authentication';
-import { LoginRequest, RegisterRequest } from './types';
+import { LoginRequest, LogoutRequest, RegisterRequest } from './types';
 import { User } from '../../types/user';
 import useUserStore, { AUTH_TOKENS_KEY } from '../../store/userStore';
 import jwtDecode from 'jwt-decode';
@@ -23,6 +23,10 @@ const useUser = () => {
     }
   });
 
+  const postLogout = useMutation<unknown, unknown, { logoutRequset: LogoutRequest }>({
+    mutationFn: (request) => userRequester.postLogout(request.logoutRequset.refreshToken)
+  });
+
   const postRegister = useMutation<User, unknown, { registerRequest: RegisterRequest }>({
     mutationFn: (request) =>
       userRequester.postRegister(
@@ -35,6 +39,7 @@ const useUser = () => {
 
   return {
     postLogin,
+    postLogout,
     postRegister
   };
 };
