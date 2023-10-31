@@ -11,6 +11,8 @@ env:
   SCRIPTS_PATH: /home/${{ secrets.SERVER_USERNAME }}/tcc/scripts
   CRONLOGS_PATH: /home/${{ secrets.SERVER_USERNAME }}/tcc
   LOG_LEVEL: INFO
+  HUGGINGFACE_EMAIL: ${{ secrets.HUGGINGFACE_EMAIL }}
+  HUGGINGFACE_PASSWORD: ${{ secrets.HUGGINGFACE_PASSWORD }}
   DB_SU_USERNAME: ${{ secrets.DB_SU_USERNAME }}
   DB_SU_PASSWORD: ${{ secrets.DB_SU_PASSWORD }}
   FACEBOOK_EMAIL: ${{ secrets.FACEBOOK_EMAIL }}
@@ -74,6 +76,8 @@ jobs:
           API_BASE_URL=${{ env.API_BASE_URL }}
           MODEL_BASE_PATH=${{ env.MODEL_BASE_PATH }}
           LOG_LEVEL=${{ env.LOG_LEVEL }}
+          HUGGINGFACE_EMAIL=${{ env.HUGGINGFACE_EMAIL }}
+          HUGGINGFACE_PASSWORD=${{ env.HUGGINGFACE_PASSWORD }}
           DB_SU_USERNAME=${{ env.DB_SU_USERNAME }}
           DB_SU_PASSWORD=${{ env.DB_SU_PASSWORD }}
           FACEBOOK_EMAIL=${{ env.FACEBOOK_EMAIL }}

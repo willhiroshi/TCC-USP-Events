@@ -1,4 +1,5 @@
 import json
+from datetime import date
 
 from classes.LlamaSingleton import LlamaSingleton
 from classes.Logger import Logger
@@ -10,8 +11,7 @@ TOP_P = 0.95
 
 
 def process_post(post_text: str):
-    global llm
-    get_info = 'Colete informações sobre o evento acima: data no formato string yyyy-mm-dd ou null, localização como string ou null, preço como number ou 0 e classifique como evento cultural ("culture"), esportivo ("sport") ou sem classificação ("unclassified"). Campos devem ser "date", "address", "price" e "type". Informe apenas os dados em um formato JSON, nada mais. Responda "Não é evento", caso não seja um evento. Resposta: \n'
+    get_info = f'\nColete informações sobre o possível evento acima: DATA de quando o evento acontecerá no formato string yyyy-mm-dd (use a seguinte data {date.today().strftime("%Y-%m")} como referência). ENDEREÇO de onde acontecerá o evento como string. PREÇO do evento como número, coloque 0 caso o evento seja gratuito. Classifique como evento cultural ("culture"), esportivo ("sport") ou sem classificação ("unclassified"). Informe apenas os dados em um formato JSON, sem nenhuma informação adicional. Os campos do JSON devem ser "date", "address", "price" e "type". Resposta: \n'
     text_to_be_processed = "\n".join([post_text, get_info])
 
     try:
