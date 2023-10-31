@@ -1,8 +1,8 @@
 from classes.APIRequester import APIRequester
 from classes.Logger import Logger
 from classes.types.Post import Post, RawPost
-from dataparser import process_post
 from geocoding import get_lat_lon_by_address
+from huggingfaceParser import process_post
 from scrapers.FaceScraper import FaceScraper
 from scrapers.InstagramScraper import InstagramScraper
 
