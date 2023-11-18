@@ -45,7 +45,7 @@ def webpage(request):
         serializer = WebPageSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
 
-        webpage = WebPage.objects.create(
+        webpage, created = WebPage.objects.get_or_create(
             link=serializer.validated_data["link"],
             source=serializer.validated_data["source"],
         )
@@ -70,7 +70,14 @@ def webpage_detail(request, user_webpage_id):
         serializer = WebPageWithoutUsers(webpage)
         deleted_webpage = serializer.data
 
-        webpage.delete()
+        usersCountWithWebpage = webpage.users.count()
+
+        if usersCountWithWebpage > 1:
+            webpageUserToDelete = webpage.users.all().get(name=request.user)
+            webpage.users.remove(webpageUserToDelete)
+
+        else:
+            webpage.delete()
 
         return Response({"data": deleted_webpage}, status=status.HTTP_200_OK)
 

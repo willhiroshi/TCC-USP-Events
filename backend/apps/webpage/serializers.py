@@ -6,8 +6,19 @@ from rest_framework import serializers
 from .models import WebPage
 
 
+def link_validator(value):
+    validator = URLValidator()
+
+    try:
+        validator(value)
+    except ValidationError:
+        raise serializers.ValidationError("Invalid URL!")
+    return value
+
+
 class WebPageSerializer(serializers.ModelSerializer):
     users = UserSerializer(many=True, read_only=True)
+    link = serializers.CharField(validators=[link_validator])
 
     class Meta:
         model = WebPage
@@ -24,15 +35,6 @@ class WebPageSerializer(serializers.ModelSerializer):
             )
 
         return data
-
-    def validate_link(self, value):
-        validator = URLValidator()
-
-        try:
-            validator(value)
-        except ValidationError:
-            raise serializers.ValidationError("Invalid URL!")
-        return value
 
 
 class WebPageWithoutUsers(serializers.ModelSerializer):
