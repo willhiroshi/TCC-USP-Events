@@ -70,11 +70,11 @@ def webpage_detail(request, user_webpage_id):
         serializer = WebPageWithoutUsers(webpage)
         deleted_webpage = serializer.data
 
-        usersCountWithWebpage = webpage.users.count()
+        users_count_with_webpage = webpage.users.count()
 
-        if usersCountWithWebpage > 1:
-            webpageUserToDelete = webpage.users.all().get(name=request.user)
-            webpage.users.remove(webpageUserToDelete)
+        if users_count_with_webpage > 1:
+            webpage_user_to_delete = webpage.users.all().get(name=request.user)
+            webpage.users.remove(webpage_user_to_delete)
 
         else:
             webpage.delete()
@@ -82,11 +82,24 @@ def webpage_detail(request, user_webpage_id):
         return Response({"data": deleted_webpage}, status=status.HTTP_200_OK)
 
     elif request.method == "PUT":
-        serializer = WebPageSerializer(
-            webpage, data=request.data, context={"request": request}
-        )
+        serializer = WebPageSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        users_count_with_webpage = webpage.users.count()
+
+        webpage_to_update, created = WebPage.objects.get_or_create(
+            link=serializer.validated_data["link"],
+            source=serializer.validated_data["source"],
+        )
+
+        webpage_to_update.users.add(request.user)
+
+        if users_count_with_webpage == 1:
+            webpage.delete()
+
+        else:
+            webpage_user_to_update = webpage.users.all().get(name=request.user)
+            webpage.users.remove(webpage_user_to_update)
+
 
         serializer = WebPageWithoutUsers(webpage)
         return Response({"data": serializer.data}, status=status.HTTP_200_OK)
