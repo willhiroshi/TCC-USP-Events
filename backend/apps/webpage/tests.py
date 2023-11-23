@@ -121,10 +121,11 @@ class WebPageDetailViewTestCase(TestCase):
         response = self.client.put(
             reverse("webpage_detail", kwargs={"user_webpage_id": self.webpage.id}), data
         )
+        new_webpage = WebPage.objects.filter(link=data["link"],source=data["source"])
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.webpage.refresh_from_db()
-        self.assertEqual(self.webpage.link, data["link"])
-        self.assertEqual(self.webpage.source, data["source"])
+        self.assertFalse(WebPage.objects.filter(id=self.webpage.id).exists())
+        self.assertTrue(new_webpage.exists())
 
 
 class AllWebPagesViewTestCase(TestCase):
