@@ -1,10 +1,14 @@
 import * as styles from './styles';
 
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 import React from 'react';
 import moment from 'moment';
 import 'moment/locale/pt';
@@ -34,42 +38,53 @@ const LocationlessPostsGrid = () => {
     return moment(momentDate).format('LL');
   };
 
+  const capitalizeFirstLetter = (text: string) => {
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  };
+
   return (
-    <div className={styles.body}>
-      <Grid
-        container
-        spacing={1}
-        className={styles.gridContainer}
-        alignItems="flex-start"
-        justifyContent="center"
-        rowGap={0}
-      >
-        {eventsSortedByDate?.map((event) => (
-          <Grid key={event.hashId} xs={12} sm={6} md={6} className={styles.gridItem}>
-            <Card
-              sx={{ maxWidth: 350, maxHeight: 600 }}
-              className={styles.cardItem}
-              variant="outlined"
-            >
-              <CardActionArea>
-                <CardHeader
-                  title="Pró-Reitoria de Graduação USP"
-                  subheader={parseDateFromEvent(event.date as string)}
-                  className={styles.cardHeader}
-                />
-                <CardContent className={styles.cardContent} style={{ padding: 0 }}>
-                  {event.source == 'Instagram' ? (
-                    <InstagramEmbed url={event.postLink} width={'100%'} />
-                  ) : (
-                    <FacebookEmbed url={event.postLink} width={'100%'} />
-                  )}
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </div>
+    <Box className={styles.body}>
+      <Paper className={styles.paper}>
+        <Box className={styles.header}>
+          <Typography variant="h5">Eventos sem localização</Typography>
+        </Box>
+        <Divider />
+
+        <Grid
+          container
+          spacing={1}
+          className={styles.gridContainer}
+          alignItems="flex-start"
+          justifyContent="center"
+          rowGap={0}
+        >
+          {eventsSortedByDate?.map((event) => (
+            <Grid key={event.hashId} xs={12} sm={6} md={6} className={styles.gridItem}>
+              <Card
+                sx={{ maxWidth: 350, maxHeight: 600 }}
+                className={styles.cardItem}
+                variant="outlined"
+              >
+                <CardActionArea>
+                  <CardHeader
+                    title={capitalizeFirstLetter(event.source)}
+                    subheader={parseDateFromEvent(event.date as string)}
+                    className={styles.cardHeader}
+                  />
+                  <CardContent className={styles.cardContent} style={{ padding: 0 }}>
+                    {event.source == 'Instagram' ? (
+                      <InstagramEmbed url={event.postLink} width={'100%'} />
+                    ) : (
+                      <FacebookEmbed url={event.postLink} width={'100%'} />
+                    )}
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
+    </Box>
   );
 };
 
