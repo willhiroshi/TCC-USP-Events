@@ -64,7 +64,7 @@ def get_process_posts() -> list[Post]:
             post_source: str = raw_post.post_source
             hash_object.update(post_text.encode())
             hash_object.update(post_source.encode())
-            hash_hex = hash_object.hexdigest()
+            hash_hex = {"hash_hex": hash_object.hexdigest()}
 
             processed_post.update(coords)
             processed_post.update(post_link)

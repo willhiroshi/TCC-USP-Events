@@ -3,6 +3,7 @@
 __pycache__/
 **/*.sqlite3
 models
+cookies_snapshot
 *.vscode
 *.log
 *.pyc

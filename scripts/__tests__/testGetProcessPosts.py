@@ -15,10 +15,12 @@ class TestGetProcessPosts(unittest.TestCase):
     @mock.patch("getProcessPosts._get_all_posts")
     @mock.patch("getProcessPosts.process_post")
     @mock.patch("getProcessPosts.get_lat_lon_by_address")
+    @mock.patch("hashlib.sha256")
     @mock.patch("getProcessPosts.logger")
     def test_get_process_posts_correctly_if_link_not_on_database(
         self,
         mock_logger,
+        mock_sha256,
         mock_get_lat_lon_by_address,
         mock_process_post,
         mock_get_all_posts,
@@ -52,6 +54,8 @@ class TestGetProcessPosts(unittest.TestCase):
 
         mock_get_lat_lon_by_address.return_value = ("0", "0")
 
+        mock_sha256.return_value.hexdigest.return_value = "mock_hexdigest"
+
         # call function
         result = get_process_posts()
 
@@ -67,6 +71,7 @@ class TestGetProcessPosts(unittest.TestCase):
                 "post_link": "http://mock.link",
                 "source": "Instagram",
                 "webpage": 1,
+                "hash_hex": "mock_hexdigest",
             }
         ]
 
