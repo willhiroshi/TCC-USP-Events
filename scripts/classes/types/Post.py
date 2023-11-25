@@ -1,5 +1,5 @@
 class Post:
-    def __init__(self, date, address, price, lat, lng, post_link, source, webpage):
+    def __init__(self, date, address, price, lat, lng, post_link, source, webpage, hash_hex):
         self.date = date
         self.address = address
         self.price = price
@@ -8,12 +8,13 @@ class Post:
         self.post_link = post_link
         self.source = source
         self.webpage = webpage
+        self.hash_hex = hash_hex
 
     def __str__(self):
-        return f"Post(date={self.date}, address={self.address}, price={self.price}, lat={self.lat}, lng={self.lng}, post_link={self.post_link}), source={self.source}, webpage={self.webpage}"
+        return f"Post(date={self.date}, address={self.address}, price={self.price}, lat={self.lat}, lng={self.lng}, post_link={self.post_link}), source={self.source}, webpage={self.webpage}, hash_hex={self.hash_hex}"
 
     def __repr__(self):
-        return f"Post(date={self.date}, address={self.address}, price={self.price}, lat={self.lat}, lng={self.lng}, post_link={self.post_link}), source={self.source}, webpage={self.webpage}"
+        return f"Post(date={self.date}, address={self.address}, price={self.price}, lat={self.lat}, lng={self.lng}, post_link={self.post_link}), source={self.source}, webpage={self.webpage}, hash_hex={self.hash_hex}"
 
     def __eq__(self, other):
         return (
@@ -25,6 +26,7 @@ class Post:
             and self.post_link == other.post_link
             and self.source == other.source
             and self.webpage == other.webpage
+            and self.hash_hex == other.hash_hex
         )
 
     def __hash__(self):
@@ -38,6 +40,7 @@ class Post:
                 self.post_link,
                 self.source,
                 self.webpage,
+                self.hash_hex,
             )
         )
 
@@ -51,6 +54,7 @@ class Post:
             "post_link": self.post_link,
             "source": self.source,
             "webpage": self.webpage,
+            "hash_hex": self.hash_hex,
         }
 
     @staticmethod
@@ -64,6 +68,7 @@ class Post:
             post_link=post_dict["post_link"],
             source=post_dict["source"],
             webpage=post_dict["webpage"],
+            hash_hex=post_dict["hash_hex"],
         )
 
 

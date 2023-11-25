@@ -1,13 +1,29 @@
 import { css } from 'emotion';
 
 export const body = css`
-  padding: 10px;
   background-color: #f7f4ef;
   width: 100%;
   display: flex;
   justify-content: center;
   height: 100vh;
   overflow-y: scroll;
+`;
+
+export const paper = css`
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+  padding: 0 20px;
+  width: 100%;
+  overflow-y: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const header = css`
+  padding: 20px 0;
 `;
 
 export const gridContainer = css`

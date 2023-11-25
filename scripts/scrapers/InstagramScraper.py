@@ -108,7 +108,7 @@ class InstagramScraper(Scraper):
                         # get post text
                         post_text = self.web_driver.find_element(
                             By.CSS_SELECTOR,
-                            "h1._aacl._aaco._aacu._aacx._aad7._aade",
+                            "h1._ap3a._aaco._aacu._aacx._aad7._aade",
                         ).text
                         logger.info(
                             f"[Post {len(posts_content)}] Post text: {post_text[:30]}...\n"

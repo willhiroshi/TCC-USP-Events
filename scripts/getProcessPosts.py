@@ -1,3 +1,4 @@
+import hashlib
 from classes.APIRequester import APIRequester
 from classes.Logger import Logger
 from classes.types.Post import Post, RawPost
@@ -58,10 +59,18 @@ def get_process_posts() -> list[Post]:
             source = {"source": raw_post.post_source}
             webpage = {"webpage": raw_post.webpage.id}
 
+            hash_object = hashlib.sha256()
+            post_text: str = raw_post.post_text
+            post_source: str = raw_post.post_source
+            hash_object.update(post_text.encode())
+            hash_object.update(post_source.encode())
+            hash_hex = {"hash_hex": hash_object.hexdigest()}
+
             processed_post.update(coords)
             processed_post.update(post_link)
             processed_post.update(source)
             processed_post.update(webpage)
+            processed_post.update(hash_hex)
             processed_posts.append(processed_post)
             logger.info(f"Processed post: {processed_post}\n")
 

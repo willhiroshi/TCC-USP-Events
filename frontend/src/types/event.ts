@@ -7,5 +7,5 @@ export interface Event {
   price?: string;
   hashId: string;
   type?: string;
-  source?: string;
+  source: string;
 }

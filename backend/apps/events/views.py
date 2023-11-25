@@ -1,5 +1,3 @@
-import hashlib
-
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser
@@ -66,13 +64,8 @@ def event(request):
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        # create a hash id for the post
-        hash_object = hashlib.sha256()
-        post_link: str = request.data["post_link"]
-        hash_object.update(post_link.encode())
-        hash_hex = hash_object.hexdigest()
         dataToSerialize = request.data
-        dataToSerialize["hash_id"] = hash_hex
+        dataToSerialize["hash_id"] = request.data["hash_hex"]
 
         serializer = EventSerializer(data=request.data)
         if not serializer.is_valid():
