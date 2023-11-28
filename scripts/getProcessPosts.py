@@ -1,4 +1,5 @@
 import hashlib
+import time
 
 from classes.APIRequester import APIRequester
 from classes.Logger import Logger
@@ -55,6 +56,8 @@ def get_process_posts() -> list[Post]:
                 continue
 
             processed_post: dict = process_post(raw_post.post_text)
+            time.sleep(30) # wait 30 seconds to avoid huggingface API rate limit
+
             lat, lng = get_lat_lon_by_address(processed_post["address"])
             coords = {"lat": lat, "lng": lng}
             source = {"source": raw_post.post_source}
