@@ -1,4 +1,5 @@
 import hashlib
+
 from classes.APIRequester import APIRequester
 from classes.Logger import Logger
 from classes.types.Post import Post, RawPost
@@ -28,11 +29,11 @@ def _get_all_posts() -> set[RawPost]:
 
     posts = set()
 
-    instagram_posts = instagram_scraper.get_posts(instagram_webpages=instagram_webpages)
     facebook_posts = facebook_scraper.get_posts(facebook_webpages=facebook_webpages)
+    instagram_posts = instagram_scraper.get_posts(instagram_webpages=instagram_webpages)
 
-    posts.update(instagram_posts)
     posts.update(facebook_posts)
+    posts.update(instagram_posts)
 
     return posts
 
