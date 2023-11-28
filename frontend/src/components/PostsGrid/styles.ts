@@ -45,11 +45,13 @@ export const gridItem = css`
 `;
 
 export const cardItem = css`
-  height: fit-content;
-  width: fit-content;
   border-radius: 5px;
   display: flex;
   justiy-content: center;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const cardHeader = css`

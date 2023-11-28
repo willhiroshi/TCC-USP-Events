@@ -61,7 +61,7 @@ const LocationlessPostsGrid = () => {
           {eventsSortedByDate?.map((event) => (
             <Grid key={event.hashId} xs={12} sm={6} md={6} className={styles.gridItem}>
               <Card
-                sx={{ maxWidth: 350, maxHeight: 600 }}
+                sx={{ maxWidth: 350, maxHeight: 600, width: '100%', overflowY: 'auto' }}
                 className={styles.cardItem}
                 variant="outlined"
               >
